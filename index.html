@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="description" content="An evidence-led engineering record of local inference experiments, model configuration, validation and deployment progress.">
+<title>Local inference lab</title>
+<style>
+:root{--paper:#f5f6f2;--surface:#fff;--ink:#182b36;--muted:#596973;--line:#dce2df;--navy:#142c39;--green:#176349;--green-bg:#e9f4ed;--amber:#80520c;--amber-bg:#fff4da;--purple:#674398;--purple-bg:#f1ecfa;--radius:16px}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:88px}body{margin:0;background:var(--paper);color:var(--ink);font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.6}a{color:var(--green);text-underline-offset:4px}a:hover{text-decoration-thickness:2px}button,a{ -webkit-tap-highlight-color:transparent}a:focus-visible,button:focus-visible{outline:3px solid #daac4c;outline-offset:5px}button{font:inherit;cursor:pointer}p,h1,h2,h3{margin-top:0}h1,h2,h3{line-height:1.15;letter-spacing:-.035em}h1{font-size:clamp(2.8rem,6.8vw,5.8rem);max-width:900px;font-weight:650;margin-bottom:24px}h2{font-size:clamp(1.7rem,3vw,2.35rem);margin-bottom:12px}h3{font-size:1.2rem;letter-spacing:-.02em;margin-bottom:16px}p{margin-bottom:16px}small{font-size:.82rem}code,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.85em;overflow-wrap:anywhere}.wrap{max-width:1240px;margin:auto;padding:0 40px}.skip{position:absolute;top:-100px;left:20px;z-index:10;background:white;padding:12px}.skip:focus{top:12px}.topbar{background:var(--navy);color:#d8e4e7;border-bottom:1px solid #ffffff25}.topbar .wrap{display:flex;justify-content:space-between;gap:20px;align-items:center;min-height:68px}.brand{font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.75rem}.edition{color:#b6c7ce;font-size:.78rem}.hero{background:var(--navy);color:#f6f8f7;padding:56px 0 46px}.eyebrow{font-size:.7rem;font-weight:750;letter-spacing:.15em;text-transform:uppercase;margin-bottom:22px}.hero .eyebrow{color:#95ccb7}.lede{color:#c0ced4;max-width:710px;font-size:1.1rem;line-height:1.65}.hero-foot{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:34px;padding-top:25px;border-top:1px solid #ffffff25}.updated{display:block;color:#b6c7ce;font-size:.8rem;margin-top:8px}.hero-status{font-weight:600;font-size:.96rem;max-width:750px}.download{border:1px solid #88a4af;background:transparent;color:#f1f6f7;padding:11px 17px;border-radius:7px;white-space:nowrap;font-size:.83rem}.download:hover{background:#ffffff12}.nav{position:sticky;top:0;z-index:3;background:#f5f6f2f5;backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav .wrap{display:flex;gap:26px;overflow-x:auto;white-space:nowrap;padding-top:17px;padding-bottom:17px}.nav a{font-size:.78rem;font-weight:650;color:var(--muted);text-decoration:none}.nav a:hover{color:var(--ink)}main{padding-bottom:70px}.section{padding-top:64px}.section-head{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;margin-bottom:25px}.section-head p{color:var(--muted);max-width:680px;margin:0;font-size:.94rem}.section-number{display:block;font-size:.7rem;letter-spacing:.12em;color:var(--muted);font-weight:700;margin-bottom:12px}.badge{display:inline-block;border-radius:5px;padding:5px 9px;font-size:.65rem;font-weight:750;letter-spacing:.075em;text-transform:uppercase;line-height:1.3;white-space:normal}.measured{background:var(--green-bg);color:var(--green)}.planned,.blocked{background:var(--amber-bg);color:var(--amber)}.upstream{background:var(--purple-bg);color:var(--purple)}.neutral{background:#edf0f2;color:#465968}.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;min-width:0}.card>:last-child{margin-bottom:0}.metric{border-top:3px solid var(--green)}.metric .eyebrow{color:var(--muted);font-size:.63rem;margin-bottom:18px}.metric-value{display:block;font-size:clamp(2.25rem,4.5vw,3.35rem);font-weight:650;line-height:1.1;letter-spacing:-.055em}.metric-unit{font-size:.85rem;color:var(--muted);letter-spacing:0;font-weight:500;margin-left:7px}.metric-label{font-weight:650;font-size:.86rem;margin:13px 0 7px}.metric-note{font-size:.79rem;color:var(--muted);margin:0}.callout{margin-top:20px;padding:19px 23px;border-radius:10px;border:1px solid var(--line);font-size:.86rem}.callout strong{display:block;margin-bottom:4px}.callout p{margin:0}.callout.planned{border-color:#e9d6a9}.callout.upstream{border-color:#d9cceb}.data-list{margin:0}.data-row{display:grid;grid-template-columns:minmax(120px,.85fr) minmax(0,1.25fr);gap:18px;padding:11px 0;border-bottom:1px solid #edf0ec;font-size:.85rem}.data-row:first-child{padding-top:0}.data-row:last-child{border:0;padding-bottom:0}.data-row dt{color:var(--muted)}.data-row dd{margin:0;overflow-wrap:anywhere;font-weight:550}.hardware-name{display:flex;justify-content:space-between;gap:12px;margin-bottom:20px;align-items:start}.hardware-name h3{margin:0}.model-name{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:1rem;line-height:1.5;overflow-wrap:anywhere;letter-spacing:0;margin:10px 0 24px}.table-shell{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:var(--radius)}table{border-collapse:collapse;width:100%;font-size:.85rem;text-align:left}caption{text-align:left;padding:18px 22px;color:var(--muted);font-size:.8rem;border-bottom:1px solid var(--line)}th{background:#eef1ed;font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;font-weight:750;padding:14px 20px;color:var(--muted)}td{padding:22px 20px;border-top:1px solid var(--line);vertical-align:top}th:first-child{width:29%}th:nth-child(2){width:17%}th:nth-child(3){width:24%}.experiment-title{font-weight:650;line-height:1.45;margin:0 0 9px}.experiment-index{display:block;color:#8a989b;font-size:.68rem;font-weight:700;letter-spacing:.08em;margin-bottom:8px}.experiment-facts{margin:0;font-size:.78rem;line-height:1.75;padding-left:16px}.experiment-note{font-size:.8rem;color:var(--muted);margin:0}.coverage-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px}.coverage-list li{border-bottom:1px solid var(--line);padding:17px 0 17px 24px;position:relative;font-size:.88rem}.coverage-list li::before{content:"";position:absolute;left:0;top:25px;width:7px;height:7px;border:2px solid var(--green);border-radius:50%}.plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.plan-card{padding:22px 24px;border-left:3px solid #d9b86f}.plan-top{display:flex;justify-content:space-between;gap:15px;align-items:start;margin-bottom:13px}.plan-top h3{font-size:1rem;margin:0;line-height:1.4}.plan-card p{font-size:.84rem;color:var(--muted);margin:0}.source-list{list-style:none;margin:0;padding:0;counter-reset:source}.source-list li{counter-increment:source;display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--line);font-size:.86rem}.source-list li::before{content:counter(source,decimal-leading-zero);font-size:.72rem;color:var(--muted);padding-top:3px}.source-list a{overflow-wrap:anywhere}.source-domain{display:block;color:var(--muted);font-size:.74rem;margin-top:3px}.method-list{padding-left:18px;color:var(--muted);font-size:.86rem;margin:0}.method-list li+li{margin-top:13px}.subheading{font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:20px}.upstream-card{border-top:3px solid var(--purple)}.upstream-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin:24px 0}.upstream-number{display:block;font-size:2.7rem;line-height:1.1;font-weight:600;letter-spacing:-.04em;color:var(--purple)}.upstream-label{display:block;color:var(--muted);font-size:.78rem;margin-top:8px}.fine{font-size:.79rem;color:var(--muted)}.footer{border-top:1px solid var(--line);padding:28px 0 36px;color:var(--muted);font-size:.76rem}.footer .wrap{display:flex;justify-content:space-between;gap:28px}.footer p{margin:0;max-width:750px}.empty{color:var(--muted);font-size:.9rem}.error{border:1px solid #bc5044;background:#fff1ed;padding:24px;border-radius:12px;margin-top:30px}.hidden{display:none!important}noscript p{padding:24px;background:#fff4da;border:1px solid #e9d6a9}
+@media(max-width:850px){.wrap{padding-left:24px;padding-right:24px}.metrics{gap:12px}.metric{padding:21px}.section-head{display:block}.section-head>.badge{margin-top:14px}.grid{gap:16px}.data-row{grid-template-columns:1fr;gap:3px}.hero{padding-top:40px}.nav .wrap{gap:23px}.table-shell table{min-width:820px}}
+@media(max-width:600px){.wrap{padding-left:20px;padding-right:20px}.edition{font-size:.65rem}.hero{padding:32px 0}.hero .eyebrow{margin-bottom:18px}.lede{font-size:.96rem}.hero-foot{display:block;margin-top:24px}.download{margin-top:21px}.section{padding-top:44px}.grid,.metrics,.plan-grid{grid-template-columns:1fr}.metrics{gap:12px}.metric{display:grid;grid-template-columns:1fr 1fr;column-gap:20px}.metric .eyebrow{grid-column:1/-1;margin-bottom:12px}.metric-value{grid-row:2/4;align-self:center;font-size:2.65rem}.metric-label{margin:0 0 5px}.metric-note{font-size:.75rem}.metric-unit{font-size:.7rem;display:block;margin:4px 0 0}.coverage-list{grid-template-columns:1fr}.card{padding:22px}.data-row{grid-template-columns:minmax(100px,.8fr) minmax(0,1.2fr);gap:12px}.footer .wrap{display:block}.footer a{display:inline-block;margin-top:16px}.upstream-values{gap:15px}.upstream-number{font-size:2.3rem}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{@page{margin:15mm}body{background:white;font-size:10pt}.wrap{max-width:none;padding:0}.topbar,.nav,.download,.skip{display:none}.hero{background:white;color:#182b36;padding:0 0 20px;border-bottom:2px solid #182b36}.hero .eyebrow,.lede,.updated{color:#596973}h1{font-size:36pt;margin-bottom:14px}.hero-foot{margin-top:15px;padding-top:12px;border-color:#dce2df}.section{padding-top:28px}.section-head{margin-bottom:15px}h2{font-size:20pt}h3{font-size:13pt}.card{padding:16px}.card,.callout,.plan-card{break-inside:avoid}.table-shell{overflow:visible}.table-shell table{min-width:0;font-size:8pt}th,td{padding:10px}tr{break-inside:avoid}.metrics{grid-template-columns:repeat(3,1fr)}.metric-value{font-size:29pt}.badge{font-size:7pt}.section-head,h2,h3{break-after:avoid}.footer{padding:15px 0}a{color:inherit}.source-domain{font-size:8pt}.footer a{display:none}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body id="top">
+<a class="skip" href="#main">Skip to report</a>
+<header>
+<div class="topbar"><div class="wrap"><span class="brand">Inference / Field notes</span><span class="edition">Public engineering record</span></div></div>
+<div class="hero"><div class="wrap">
+<p class="eyebrow">Local hardware. Observable results.</p>
+<h1 id="report-title">Local inference lab</h1>
+<p class="lede">A working record of model fit, real tool use, and serving experiments. Local measurements, published benchmarks, and work still to do are kept separate.</p>
+<div class="hero-foot"><div><div id="report-status" class="hero-status"></div><time id="updated" class="updated"></time></div><button id="download" class="download" type="button" disabled>Download public data</button></div>
+</div></div>
+</header>
+<nav class="nav" aria-label="Report sections"><div class="wrap"><a href="#overview">Overview</a><a href="#hardware">Hardware</a><a href="#experiments">Experiments</a><a href="#configuration">Configuration</a><a href="#deployment">Spark deployment</a><a href="#validation">Validation</a><a href="#upstream">Upstream</a><a href="#next">Test plan</a><a href="#sources">Sources</a></div></nav>
+<main id="main" class="wrap">
+<noscript><p>This report needs JavaScript to render its embedded public data. No network access is required. The complete factual record is included in this HTML file’s report-data block.</p></noscript>
+<div id="render-error" class="error hidden" role="alert"></div>
+<section class="section" id="overview" aria-labelledby="overview-title"><div class="section-head"><div><span class="section-number">01 / At a glance</span><h2 id="overview-title">Evidence before expectations.</h2><p>Selected local observations. These figures describe specific runs, not a universal model or hardware ranking.</p></div></div><div class="legend" aria-label="Evidence categories"><span class="badge measured">Measured locally</span><span class="badge upstream">Upstream-reported</span><span class="badge planned">Planned / not verified</span></div><div id="summary-metrics" class="metrics"></div><div id="overview-note"></div></section>
+<section class="section" id="hardware" aria-labelledby="hardware-title"><div class="section-head"><div><span class="section-number">02 / Machines</span><h2 id="hardware-title">The hardware under test.</h2><p>Recorded hardware and system snapshots; memory figures describe the captured state, not a live monitor.</p></div></div><div id="hardware-cards" class="grid"></div></section>
+<section class="section" id="experiments" aria-labelledby="experiments-title"><div class="section-head"><div><span class="section-number">03 / Experiment log</span><h2 id="experiments-title">What was tried. What held up.</h2><p>The recorded experiment sequence includes rejected configurations and retained baselines. Missing measurements are not inferred.</p></div><span class="badge measured">Local evidence</span></div><div class="table-shell" tabindex="0" role="region" aria-label="Experiment results, horizontally scrollable on small screens"><table><caption>Recorded experiments in source order. Individual run timestamps were not supplied.</caption><thead><tr><th scope="col">Experiment</th><th scope="col">Outcome</th><th scope="col">Recorded observations</th><th scope="col">Interpretation &amp; limits</th></tr></thead><tbody id="experiment-rows"></tbody></table></div></section>
+<section class="section" id="configuration" aria-labelledby="configuration-title"><div class="section-head"><div><span class="section-number">04 / Selected configuration</span><h2 id="configuration-title">The current j9 setup.</h2><p>Model settings and memory observations for the selected local configuration.</p></div><span class="badge measured">Recorded configuration</span></div><div class="card"><div id="model-heading"></div><dl id="model-fields" class="data-list"></dl></div></section>
+<section class="section" id="deployment" aria-labelledby="deployment-title"><div class="section-head"><div><span class="section-number">05 / Spark NVFP4</span><h2 id="deployment-title">Deployment ledger.</h2><p>Target settings, immutable pins, and the current service state. A recorded target is not evidence of a running service.</p></div><span id="deployment-badge" class="badge neutral"></span></div><div id="deployment-alert"></div><div class="grid" style="margin-top:20px"><div class="card"><h3>Artifact pins</h3><dl id="deployment-pins" class="data-list"></dl></div><div class="card"><h3>Serving configuration &amp; safeguards</h3><dl id="deployment-fields" class="data-list"></dl></div></div></section>
+<section class="section" id="validation" aria-labelledby="validation-title"><div class="section-head"><div><span class="section-number">06 / Independent checks</span><h2 id="validation-title">Correctness beyond one prompt.</h2><p>Recorded workflow coverage includes unseen inputs and independent output checks. This is local workflow evidence, not a claim that the planned Spark NVFP4 suite has passed.</p></div><span class="badge measured">Observed coverage</span></div><div class="card"><ul id="coverage" class="coverage-list"></ul></div></section>
+<section class="section" id="upstream" aria-labelledby="upstream-title"><div class="section-head"><div><span class="section-number">07 / External reference</span><h2 id="upstream-title">Published elsewhere. Not reproduced here.</h2><p>External benchmarks provide context for the experiment; they do not replace a local measurement.</p></div><span class="badge upstream">Upstream-reported</span></div><div id="upstream-content"></div></section>
+<section class="section" id="next" aria-labelledby="next-title"><div class="section-head"><div><span class="section-number">08 / Verification queue</span><h2 id="next-title">What still needs to be proven.</h2><p>The next checks and their intended acceptance boundaries. Each status comes from the report data, not from the presence of a test plan.</p></div><span class="badge planned">Future work</span></div><div id="test-plan" class="plan-grid"></div></section>
+<section class="section" id="sources" aria-labelledby="sources-title"><div class="section-head"><div><span class="section-number">09 / Provenance</span><h2 id="sources-title">Sources &amp; reading the numbers.</h2></div></div><div class="grid"><div class="card"><h3>Reference material</h3><ol id="source-list" class="source-list"></ol></div><div class="card"><h3>Methodology &amp; caveats</h3><ul class="method-list"><li>Decode throughput, end-to-end wall time, and tool-workflow completion time measure different things. They are not interchangeable.</li><li>Single-stream throughput and multi-stream aggregate throughput are different quantities. Aggregate output is not per-user speed.</li><li>Context capacity and GPU residency are configuration observations, not proof of long-context retrieval quality.</li><li>The experiment log records the available evidence, including failures and limitations. It does not supply confidence intervals, sustained-load results, or missing timings.</li><li>This page is a point-in-time report. The timestamp belongs to the embedded data; reloading displays the latest published snapshot, without polling an inference service.</li></ul></div></div></section>
+</main>
+<footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
+<script id="report-data" type="application/json">{
+  "title": "Local inference lab",
+  "updated_at": "2026-10-07T06:05:49.628717+00:00",
+  "status": "Spark NVFP4 deployment preparing; administrator handoff required",
+  "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
+  "hardware": [
+    {
+      "name": "j9",
+      "gpu": "NVIDIA RTX 4090",
+      "gpu_memory_mib": 24564,
+      "platform": "Linux x86_64"
+    },
+    {
+      "name": "Spark",
+      "gpu": "NVIDIA GB10",
+      "platform": "Linux ARM64",
+      "ram_gib": 121,
+      "available_ram_gib": 118,
+      "free_disk": "3.5 TiB",
+      "driver": "580.178.04",
+      "container_toolkit": "1.20.1"
+    }
+  ],
+  "current_model": {
+    "host": "j9",
+    "name": "hermes-qwen3.6:27b-64k",
+    "base": "qwen3.6:27b",
+    "parameters": "27.3B",
+    "weights": "Q4_K_M",
+    "context_tokens": 65536,
+    "kv_cache": "Q8_0",
+    "flash_attention": true,
+    "speculative_decoding": false,
+    "gpu_residency_percent": 100,
+    "gpu_used_mib": 22137,
+    "gpu_free_mib": 1971,
+    "download_gb_approx": 17.8
+  },
+  "measurements": [
+    {
+      "id": "j9-64k-fp16-mtp",
+      "label": "Initial 64K context, FP16 KV, MTP",
+      "kind": "measured",
+      "status": "CPU spill",
+      "gpu_percent": 82,
+      "note": "Not selected: substantial CPU offload."
+    },
+    {
+      "id": "j9-32k",
+      "label": "32K context",
+      "kind": "measured",
+      "status": "Rejected by Hermes",
+      "gpu_percent": 100,
+      "note": "Installed Hermes requires at least 64,000 context tokens. Variant deleted."
+    },
+    {
+      "id": "j9-64k-no-mtp",
+      "label": "64K context, FP16 KV, no MTP",
+      "kind": "measured",
+      "status": "Functional but CPU spill",
+      "gpu_percent": 93,
+      "hermes_seconds": 108.65,
+      "tool_calls": 8,
+      "note": "Passed original and unseen-data workflows. One missing tool argument was corrected by the model."
+    },
+    {
+      "id": "j9-final-hermes",
+      "label": "Final Hermes workflow through PAIR from another machine",
+      "kind": "measured",
+      "status": "Passed",
+      "gpu_percent": 100,
+      "hermes_seconds": 51.04,
+      "tool_calls": 4,
+      "validation_scenarios": 2,
+      "note": "Read synthetic expenses/tasks, generated and executed a Python helper, verified output; independent unseen-input check passed."
+    },
+    {
+      "id": "j9-final-decode",
+      "label": "Bounded text-generation sample through PAIR",
+      "kind": "measured",
+      "status": "Passed",
+      "generation_tokens_per_second": 48.97,
+      "generated_tokens": 256,
+      "wall_seconds": 8.52,
+      "load_seconds": 3.143,
+      "thinking": false,
+      "note": "Decode rate excludes loading/prefill. One short sample, not a sustained-throughput guarantee."
+    },
+    {
+      "id": "spark-gguf-baseline",
+      "label": "Earlier Spark Ollama/GGUF coding baseline",
+      "kind": "measured",
+      "status": "Passed",
+      "model": "qwen3.6:35b-a3b-mtp-q4_K_M",
+      "passed_checks": 8,
+      "total_checks": 8,
+      "note": "Existing working baseline retained. No throughput number recorded here."
+    }
+  ],
+  "validation_coverage": [
+    "Exact decimal EUR arithmetic, including refunds and zero values",
+    "Pending transactions and foreign currency excluded",
+    "Task sorting by due date and ID, undated tasks last",
+    "Completed tasks excluded",
+    "Unseen receipt and changed tasks",
+    "Quoted CSV category with embedded comma",
+    "Input files preserved"
+  ],
+  "spark_deployment": {
+    "state": "Preparing; Docker access blocked",
+    "model": "unsloth/Qwen3.6-35B-A3B-NVFP4",
+    "model_revision": "739af1e7aac320af1682ed1e0cce369af4c5265d",
+    "recipe_revision": "79c9e6f359f6101cdacd0dfd6fe9861ae2493a4d",
+    "image_digest": "sha256:19627342e1da2607f4db50745dca30e57d7dd0ebff06062f03fd69b43a252931",
+    "context_tokens": 65536,
+    "max_concurrent_sequences": 4,
+    "memory_utilization_target": 0.6,
+    "security": "Loopback binding plus authenticated private access; no public inference endpoint",
+    "blocker": "Administrator must grant the service operator Docker access. No permission bypass attempted.",
+    "live_hermes_config_changed": false,
+    "image_repository": "ghcr.io/miaai-lab/mia-vllm-gb10-linear-b12x",
+    "model_download": "Complete: all 19 snapshot files downloaded at the pinned revision; 225.47 seconds wall time"
+  },
+  "upstream_benchmarks": {
+    "source": "https://github.com/MiaAI-Lab/Unsloth-Qwen3.6-35b-NVFP4-DGX-Spark",
+    "kind": "upstream-reported, not measured here",
+    "model": "Qwen3.6-35B NVFP4",
+    "completion_tokens": 500,
+    "single_stream_tps": 95.1,
+    "eight_stream_aggregate_tps": 317.0,
+    "note": "Different model, runtime, quantization and workload from j9 measurements. Do not treat as a like-for-like speedup."
+  },
+  "planned_tests": [
+    {
+      "id": "health-auth",
+      "name": "Readiness and API authentication",
+      "status": "planned",
+      "purpose": "Require authorized model discovery and reject unauthorized inference."
+    },
+    {
+      "id": "hermes",
+      "name": "Real Hermes tool use",
+      "status": "planned",
+      "purpose": "Reuse the validated synthetic workflow and independently check unseen inputs."
+    },
+    {
+      "id": "concurrency",
+      "name": "Streaming latency and concurrency",
+      "status": "planned",
+      "purpose": "Measure first-token latency, decode throughput and fairness at one and four active requests; eight clients test queueing, not eight active slots."
+    },
+    {
+      "id": "structured",
+      "name": "Structured JSON and tool arguments",
+      "status": "planned",
+      "purpose": "Validate required fields, numeric values, tool-result follow-up and schema adherence."
+    },
+    {
+      "id": "vision",
+      "name": "Synthetic receipt vision",
+      "status": "planned",
+      "purpose": "Extract known amounts from an image without using personal data."
+    },
+    {
+      "id": "context",
+      "name": "Long-context retrieval",
+      "status": "planned",
+      "purpose": "Check known facts at several positions in 8K, 32K and near-64K contexts."
+    },
+    {
+      "id": "cancel",
+      "name": "Client cancellation and recovery",
+      "status": "planned",
+      "purpose": "Ensure disconnected streams release work and the next request succeeds."
+    },
+    {
+      "id": "restart",
+      "name": "Service restart recovery",
+      "status": "planned",
+      "purpose": "Confirm pinned weights, private binding, authentication and readiness survive a controlled restart."
+    }
+  ],
+  "sources": [
+    {
+      "label": "MiaAI Spark NVFP4 recipe",
+      "url": "https://github.com/MiaAI-Lab/Unsloth-Qwen3.6-35b-NVFP4-DGX-Spark"
+    },
+    {
+      "label": "Pinned model",
+      "url": "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-NVFP4/tree/739af1e7aac320af1682ed1e0cce369af4c5265d"
+    },
+    {
+      "label": "Hermes local model guidance",
+      "url": "https://hermes-agent.nousresearch.com/docs/user-guide/local-models/"
+    },
+    {
+      "label": "vLLM memory guidance",
+      "url": "https://docs.vllm.ai/en/stable/configuration/conserving_memory.html"
+    }
+  ]
+}</script>
+<script>
+(function () {
+'use strict';
+const byId = id => document.getElementById(id);
+const el = (tag, text, className) => {
+  const node = document.createElement(tag);
+  if (text !== undefined && text !== null) node.textContent = String(text);
+  if (className) node.className = className;
+  return node;
+};
+const number = value => typeof value === 'number' ? value.toLocaleString('en-US', {maximumFractionDigits: 6}) : String(value);
+const labels = {
+  host:'Host',name:'Model name',base:'Base model',parameters:'Parameters',weights:'Weight quantization',context_tokens:'Context capacity',kv_cache:'KV-cache precision',flash_attention:'Flash attention',speculative_decoding:'Speculative decoding',gpu_residency_percent:'GPU residency',gpu_used_mib:'GPU memory used',gpu_free_mib:'GPU memory free',download_gb_approx:'Approximate download',gpu:'GPU',gpu_memory_mib:'GPU memory',platform:'Platform',ram_gib:'System RAM',available_ram_gib:'Available RAM',free_disk:'Free disk',driver:'NVIDIA driver',container_toolkit:'Container toolkit',model:'Model',model_revision:'Model revision',recipe_revision:'Recipe revision',image_digest:'Container image digest',max_concurrent_sequences:'Maximum concurrent sequences',memory_utilization_target:'Memory utilization target',security:'Access policy',live_hermes_config_changed:'Live Hermes configuration changed',gpu_percent:'GPU residency',hermes_seconds:'Hermes workflow time',tool_calls:'Tool calls',validation_scenarios:'Validation scenarios',generation_tokens_per_second:'Decode throughput',generated_tokens:'Generated tokens',wall_seconds:'End-to-end wall time',load_seconds:'Load time',thinking:'Thinking',passed_checks:'Checks passed',total_checks:'Total checks',completion_tokens:'Completion length',single_stream_tps:'Single-stream throughput',eight_stream_aggregate_tps:'Eight-stream aggregate throughput',kind:'Evidence classification'
+};
+const label = key => labels[key] || key.replace(/_/g,' ').replace(/^./, s => s.toUpperCase());
+function format(key, value) {
+  if (value === null || value === undefined) return 'Not recorded';
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+  if (typeof value === 'object') return JSON.stringify(value);
+  const units = {context_tokens:' tokens',gpu_residency_percent:'%',gpu_percent:'%',gpu_memory_mib:' MiB',gpu_used_mib:' MiB',gpu_free_mib:' MiB',ram_gib:' GiB',available_ram_gib:' GiB',download_gb_approx:' GB',hermes_seconds:' s',wall_seconds:' s',load_seconds:' s',generation_tokens_per_second:' tokens/s',single_stream_tps:' tokens/s',eight_stream_aggregate_tps:' tokens/s',completion_tokens:' tokens'};
+  return number(value) + (units[key] || '');
+}
+function fields(target, object, excluded) {
+  Object.entries(object || {}).forEach(([key,value]) => {
+    if ((excluded || []).includes(key)) return;
+    const row = el('div',null,'data-row');
+    row.append(el('dt',label(key)));
+    const definition = el('dd');
+    definition.append(el(/revision|digest/.test(key) ? 'code' : 'span',format(key,value)));
+    row.append(definition); target.append(row);
+  });
+}
+function badge(text, type) { return el('span',text,'badge '+type); }
+function stateType(text) {
+  const value = String(text || '').toLowerCase();
+  if (/blocked|prepar|pending|planned|not deployed|handoff|reject|spill|fail/.test(value)) return 'planned';
+  if (/passed|ready|running|deployed|complete|healthy/.test(value)) return 'measured';
+  return 'neutral';
+}
+function callout(target, title, detail, type) {
+  const box = el('div',null,'callout '+type);
+  box.append(el('strong',title));
+  if (detail) box.append(el('p',detail));
+  target.append(box);
+}
+function metric(value, unit, title, note) {
+  const card = el('article',null,'card metric');
+  card.append(el('div','Measured locally','eyebrow'));
+  const figure = el('span',number(value),'metric-value');
+  figure.append(el('span',unit,'metric-unit'));
+  card.append(figure,el('p',title,'metric-label'),el('p',note,'metric-note'));
+  byId('summary-metrics').append(card);
+}
+function sourceLink(url, title) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return el('span',title);
+    const link = el('a',title); link.href = parsed.href; link.rel = 'noopener noreferrer'; return link;
+  } catch (_) { return el('span',title); }
+}
+try {
+  const data = JSON.parse(byId('report-data').textContent);
+  document.title = data.title || 'Local inference lab';
+  byId('report-title').textContent = document.title;
+  byId('report-status').textContent = data.status || 'Status not recorded';
+  const timestamp = new Date(data.updated_at);
+  if (!Number.isNaN(timestamp.getTime())) {
+    byId('updated').dateTime = timestamp.toISOString();
+    byId('updated').textContent = 'Snapshot updated '+timestamp.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,timeZone:'UTC'})+' UTC';
+  } else byId('updated').textContent = 'Update time not recorded';
+  byId('privacy').textContent = data.privacy || 'Public engineering report.';
+  const measurements = data.measurements || [];
+  const model = data.current_model || {};
+  const deployment = data.spark_deployment || {};
+  const decode = measurements.find(item => item.id === 'j9-final-decode');
+  const workflow = measurements.find(item => item.id === 'j9-final-hermes');
+  if (decode && decode.generation_tokens_per_second != null) metric(decode.generation_tokens_per_second,'tokens/s','Bounded decode sample',decode.note);
+  if (workflow && workflow.hermes_seconds != null) metric(workflow.hermes_seconds,'seconds','Final Hermes workflow',[workflow.tool_calls != null ? number(workflow.tool_calls)+' tool calls' : null,workflow.validation_scenarios != null ? number(workflow.validation_scenarios)+' validation scenarios' : null].filter(Boolean).join(' · '));
+  if (model.gpu_residency_percent != null) metric(model.gpu_residency_percent,'% GPU','Selected model residency',model.context_tokens != null ? number(model.context_tokens)+'-token configured context. Residency is not a retrieval-quality result.' : 'Recorded model residency.');
+  if (deployment.state) callout(byId('overview-note'),'Spark NVFP4: '+deployment.state,deployment.blocker || deployment.security,stateType(deployment.state));
+  (data.hardware || []).forEach(machine => {
+    const card = el('article',null,'card'); const heading = el('div',null,'hardware-name');
+    heading.append(el('h3',machine.name),badge('Hardware snapshot','neutral')); card.append(heading);
+    const list = el('dl',null,'data-list'); fields(list,machine,['name']); card.append(list); byId('hardware-cards').append(card);
+  });
+  measurements.forEach((run,index) => {
+    const row = el('tr'); const titleCell = el('td');
+    titleCell.append(el('span',String(index+1).padStart(2,'0'),'experiment-index'),el('p',run.label || run.id,'experiment-title'),badge(run.kind || 'Unclassified',run.kind === 'measured' ? 'measured' : 'neutral'));
+    const outcome = el('td'); outcome.append(badge(run.status || 'Not recorded',stateType(run.status)));
+    const observed = el('td'); const list = el('ul',null,'experiment-facts');
+    Object.entries(run).forEach(([key,value]) => {
+      if (!['id','label','kind','status','note'].includes(key)) list.append(el('li',label(key)+': '+format(key,value)));
+    });
+    observed.append(list.childElementCount ? list : el('span','No numeric observations recorded.','fine'));
+    const note = el('td'); note.append(el('p',run.note || 'No additional interpretation recorded.','experiment-note'));
+    row.append(titleCell,outcome,observed,note); byId('experiment-rows').append(row);
+  });
+  byId('model-heading').append(el('div',model.host ? 'Selected model / '+model.host : 'Selected model','subheading'),el('h3',model.name || 'Model not recorded','model-name'));
+  fields(byId('model-fields'),model,['name']);
+  byId('deployment-badge').textContent = deployment.state || 'State not recorded';
+  byId('deployment-badge').className = 'badge '+stateType(deployment.state);
+  if (deployment.blocker) callout(byId('deployment-alert'),'Recorded blocker',deployment.blocker,'planned');
+  const pins = ['model','model_revision','recipe_revision','image_digest'];
+  fields(byId('deployment-pins'),Object.fromEntries(Object.entries(deployment).filter(([key]) => pins.includes(key))));
+  fields(byId('deployment-fields'),deployment,['state','blocker',...pins]);
+  (data.validation_coverage || []).forEach(item => byId('coverage').append(el('li',typeof item === 'string' ? item : JSON.stringify(item))));
+  const upstream = data.upstream_benchmarks;
+  if (upstream) {
+    const card = el('article',null,'card upstream-card');
+    card.append(badge(upstream.kind || 'Upstream-reported, not measured here','upstream'),el('h3',upstream.model || 'Published benchmark','model-name'));
+    const values = el('div',null,'upstream-values');
+    [['single_stream_tps','Single stream · tokens/s'],['eight_stream_aggregate_tps','Eight streams, aggregate · tokens/s']].forEach(([key,title]) => {
+      if (upstream[key] == null) return;
+      const value = el('div'); value.append(el('span',number(upstream[key]),'upstream-number'),el('span',title,'upstream-label')); values.append(value);
+    });
+    card.append(values);
+    const list = el('dl',null,'data-list'); fields(list,upstream,['source','kind','model','single_stream_tps','eight_stream_aggregate_tps','note']); card.append(list);
+    if (upstream.source) { const line = el('p',null,'fine'); line.append(sourceLink(upstream.source,'View upstream benchmark source')); card.append(line); }
+    if (upstream.note) callout(card,'Comparability warning',upstream.note,'upstream');
+    byId('upstream-content').append(card);
+  } else byId('upstream-content').append(el('p','No upstream benchmark recorded.','empty'));
+  (data.planned_tests || []).forEach(item => {
+    const card = el('article',null,'card plan-card'); const top = el('div',null,'plan-top');
+    top.append(el('h3',item.name || item.id),badge(item.status || 'Planned',stateType(item.status || 'planned'))); card.append(top,el('p',item.purpose));
+    const extras = el('dl',null,'data-list'); fields(extras,item,['id','name','status','purpose']); if (extras.childElementCount) card.append(extras);
+    byId('test-plan').append(card);
+  });
+  (data.sources || []).forEach(source => {
+    const item = el('li'); const body = el('div'); body.append(sourceLink(source.url,source.label || source.url));
+    try { body.append(el('span',new URL(source.url).hostname,'source-domain')); } catch (_) {}
+    item.append(body); byId('source-list').append(item);
+  });
+  byId('download').disabled = false;
+  byId('download').addEventListener('click',() => {
+    const blob = new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'});
+    const url = URL.createObjectURL(blob); const link = el('a'); link.href = url; link.download = 'local-inference-lab-public-data.json';
+    document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url),1000);
+  });
+} catch (error) {
+  const box = byId('render-error'); box.classList.remove('hidden');
+  box.textContent = 'The embedded report data could not be displayed. This snapshot may be incomplete; do not infer a deployment or test result from an empty section.';
+  console.error('Report rendering failed:',error);
+}
+})();
+</script>
+</body>
+</html>
