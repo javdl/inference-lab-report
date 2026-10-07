@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T18:04:10.904549+00:00",
+  "updated_at": "2026-10-07T18:04:28.015224+00:00",
   "status": "j9 and Spark running; Spark functional and recovery checks in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -628,6 +628,26 @@
       },
       "note": "Three facts among repeated-word padding. Not a realistic-document benchmark; prefix caches were not flushed.",
       "wall_seconds": 13.9746
+    },
+    {
+      "id": "spark-vision",
+      "label": "Spark NVFP4: vision",
+      "kind": "measured",
+      "status": "passed",
+      "output": {
+        "code": "ALPHA-407",
+        "currency": "EUR",
+        "total_cents": 850,
+        "item_count": 3
+      },
+      "usage": {
+        "prompt_tokens": 302,
+        "total_tokens": 347,
+        "completion_tokens": 45,
+        "prompt_tokens_details": null
+      },
+      "note": "Synthetic receipt only; no personal image or data.",
+      "wall_seconds": 0.857
     }
   ],
   "validation_coverage": [
@@ -709,7 +729,7 @@
     {
       "id": "vision",
       "name": "Synthetic receipt vision",
-      "status": "pending verification",
+      "status": "passed",
       "purpose": "Extract known amounts from an image without using personal data.",
       "target": "Spark NVFP4"
     },
