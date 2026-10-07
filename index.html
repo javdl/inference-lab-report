@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T17:38:45.225378+00:00",
+  "updated_at": "2026-10-07T17:43:20.687593+00:00",
   "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -311,6 +311,17 @@
       "gpu_used_mib": 22150,
       "gpu_free_mib": 1958,
       "note": "After long-context and vision workloads, Ollama still reported size = size_vram = 18,939,715,255 bytes."
+    },
+    {
+      "id": "spark-gpu-preflight",
+      "label": "Spark: actual GPU compatibility preflight",
+      "kind": "measured",
+      "status": "passed",
+      "compute_capability": "12.1",
+      "b12x_gemm": true,
+      "b12x_moe": true,
+      "linear_fallback_patch": true,
+      "note": "The pinned container passed its GPU capability/patch checks. Actual model initialization and generation are separate checks."
     }
   ],
   "validation_coverage": [
@@ -323,7 +334,7 @@
     "Input files preserved"
   ],
   "spark_deployment": {
-    "state": "Preparing runtime; administrator handoff completed",
+    "state": "Starting; GPU preflight passed",
     "model": "unsloth/Qwen3.6-35B-A3B-NVFP4",
     "model_revision": "739af1e7aac320af1682ed1e0cce369af4c5265d",
     "recipe_revision": "79c9e6f359f6101cdacd0dfd6fe9861ae2493a4d",
@@ -340,13 +351,14 @@
     "weight_bytes": 26489446568,
     "max_batched_tokens": 8192,
     "private_route": "Configured: HTTPS for /v1 only; certificate verified; non-API root returns 404. API returns 502 while backend is not started.",
-    "service": "Prepared service; pinned image pull in progress before GPU compatibility checks and startup",
+    "service": "Enabled persistent user service; initial model loading and readiness in progress",
     "credential": "256-bit random API key generated locally in an owner-only file; enforcement awaits server startup.",
     "capacity_note": "Four active sequences is a scheduler limit, not proof that four full-context requests fit without KV-cache preemption.",
     "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested.",
     "configuration_commit": "2ac0c88 (pushed to the private configuration repository)",
     "weight_integrity": "All six shards independently verified against the pinned upstream SHA-256 and size metadata",
-    "runtime_verified": false
+    "runtime_verified": false,
+    "runtime_versions": "PyTorch 2.11.0+cu130; CUDA 13.0; vLLM 0.26.1.dev0+gf2654939e.d20260726.cu132; FlashInfer 0.6.14"
   },
   "upstream_benchmarks": {
     "source": "https://github.com/MiaAI-Lab/Unsloth-Qwen3.6-35b-NVFP4-DGX-Spark",
