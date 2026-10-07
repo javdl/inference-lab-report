@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T18:00:47.553379+00:00",
+  "updated_at": "2026-10-07T18:01:25.053149+00:00",
   "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -579,6 +579,25 @@
       },
       "note": "Three facts among repeated-word padding. Not a realistic-document benchmark; prefix caches were not flushed.",
       "wall_seconds": 2.2889
+    },
+    {
+      "id": "spark-context-32000",
+      "label": "Spark NVFP4: context-32000",
+      "kind": "measured",
+      "status": "passed",
+      "output": {
+        "north": "violet-39417",
+        "central": "amber-82063",
+        "south": "silver-15692"
+      },
+      "usage": {
+        "prompt_tokens": 32075,
+        "total_tokens": 32122,
+        "completion_tokens": 47,
+        "prompt_tokens_details": null
+      },
+      "note": "Three facts among repeated-word padding. Not a realistic-document benchmark; prefix caches were not flushed.",
+      "wall_seconds": 6.3867
     }
   ],
   "validation_coverage": [
