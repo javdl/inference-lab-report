@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T17:54:52.556366+00:00",
+  "updated_at": "2026-10-07T17:55:24.956413+00:00",
   "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -419,6 +419,13 @@
       },
       "note": "Forced function choice; real Python arithmetic followed by a tool-result response. Hermes separately tests automatic tool selection.",
       "wall_seconds": 1.7883
+    },
+    {
+      "id": "spark-hermes-transport-initial",
+      "label": "Spark Hermes: initial remote transport check",
+      "kind": "measured",
+      "status": "failed",
+      "note": "The client could not resolve the private endpoint DNS name; no inference request was sent. Investigating client DNS without disabling TLS."
     }
   ],
   "validation_coverage": [
