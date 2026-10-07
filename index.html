@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T06:18:25.134374+00:00",
+  "updated_at": "2026-10-07T06:22:04.930239+00:00",
   "status": "Spark NVFP4 deployment preparing; administrator handoff required",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -165,6 +165,46 @@
       "prompt_tokens": 61,
       "status": "passed",
       "wall_seconds": 4.219
+    },
+    {
+      "api": "Ollama native Chat API over SSH; not a Hermes end-to-end run",
+      "arguments": {
+        "items": [
+          {
+            "quantity": 3,
+            "unit_price_cents": 125
+          },
+          {
+            "quantity": 2,
+            "unit_price_cents": 399
+          }
+        ]
+      },
+      "id": "j9-extra-tool-roundtrip",
+      "kind": "measured",
+      "label": "j9: tool-call round trip",
+      "note": "Required integer arguments checked independently; Python executed the arithmetic and the model consumed the actual tool result.",
+      "output": {
+        "currency": "EUR",
+        "total_cents": 1173
+      },
+      "status": "passed",
+      "tool_calls": 1,
+      "wall_seconds": 1.967
+    },
+    {
+      "id": "spark-credential-preflight",
+      "kind": "measured",
+      "label": "Spark: fail-closed launcher credentials",
+      "status": "passed",
+      "cases": [
+        "missing file",
+        "empty file",
+        "world-readable file",
+        "symbolic link",
+        "duplicate key with empty override"
+      ],
+      "note": "All five unsafe credential files were rejected before Docker invocation. This does not yet verify HTTP authentication enforcement."
     }
   ],
   "validation_coverage": [
