@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T17:54:51.091475+00:00",
+  "updated_at": "2026-10-07T17:54:52.556366+00:00",
   "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -395,6 +395,30 @@
         "prompt_tokens_details": null
       },
       "wall_seconds": 0.1377
+    },
+    {
+      "id": "spark-tool",
+      "label": "Spark NVFP4: tool",
+      "kind": "measured",
+      "status": "passed",
+      "arguments": {
+        "items": [
+          {
+            "quantity": 3,
+            "unit_price_cents": 125
+          },
+          {
+            "quantity": 2,
+            "unit_price_cents": 399
+          }
+        ]
+      },
+      "output": {
+        "total_cents": 1173,
+        "currency": "EUR"
+      },
+      "note": "Forced function choice; real Python arithmetic followed by a tool-result response. Hermes separately tests automatic tool selection.",
+      "wall_seconds": 1.7883
     }
   ],
   "validation_coverage": [
@@ -468,7 +492,7 @@
     {
       "id": "structured",
       "name": "Structured JSON and tool arguments",
-      "status": "pending runtime readiness",
+      "status": "passed",
       "purpose": "Validate required fields, numeric values, tool-result follow-up and schema adherence.",
       "target": "Spark NVFP4"
     },
