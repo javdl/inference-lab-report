@@ -43,8 +43,8 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T06:38:36.776063+00:00",
-  "status": "Seven additional j9 checks passed; Spark NVFP4 awaiting Docker authorization",
+  "updated_at": "2026-10-07T17:38:45.225378+00:00",
+  "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -323,7 +323,7 @@
     "Input files preserved"
   ],
   "spark_deployment": {
-    "state": "Preparing; Docker access blocked",
+    "state": "Preparing runtime; administrator handoff completed",
     "model": "unsloth/Qwen3.6-35B-A3B-NVFP4",
     "model_revision": "739af1e7aac320af1682ed1e0cce369af4c5265d",
     "recipe_revision": "79c9e6f359f6101cdacd0dfd6fe9861ae2493a4d",
@@ -332,7 +332,7 @@
     "max_concurrent_sequences": 4,
     "memory_utilization_target": 0.6,
     "security": "Loopback binding plus authenticated private access; no public inference endpoint",
-    "blocker": "Administrator must grant the service operator Docker access. No permission bypass attempted.",
+    "blocker": null,
     "live_hermes_config_changed": false,
     "image_repository": "ghcr.io/miaai-lab/mia-vllm-gb10-linear-b12x",
     "model_download": "Complete: all 19 snapshot files downloaded at the pinned revision; 225.47 seconds wall time",
@@ -340,7 +340,7 @@
     "weight_bytes": 26489446568,
     "max_batched_tokens": 8192,
     "private_route": "Configured: HTTPS for /v1 only; certificate verified; non-API root returns 404. API returns 502 while backend is not started.",
-    "service": "Launcher and systemd user unit installed; syntax and unit validation passed. Not enabled or started; Docker authorization remains required.",
+    "service": "Prepared service; pinned image pull in progress before GPU compatibility checks and startup",
     "credential": "256-bit random API key generated locally in an owner-only file; enforcement awaits server startup.",
     "capacity_note": "Four active sequences is a scheduler limit, not proof that four full-context requests fit without KV-cache preemption.",
     "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested.",
@@ -361,56 +361,56 @@
     {
       "id": "health-auth",
       "name": "Readiness and API authentication",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Require authorized model discovery and reject unauthorized inference.",
       "target": "Spark NVFP4"
     },
     {
       "id": "hermes",
       "name": "Real Hermes tool use",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Reuse the validated synthetic workflow and independently check unseen inputs.",
       "target": "Spark NVFP4"
     },
     {
       "id": "concurrency",
       "name": "Streaming latency and concurrency",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Measure first-token latency, decode throughput and fairness at one and four active requests; eight clients test queueing, not eight active slots.",
       "target": "Spark NVFP4"
     },
     {
       "id": "structured",
       "name": "Structured JSON and tool arguments",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Validate required fields, numeric values, tool-result follow-up and schema adherence.",
       "target": "Spark NVFP4"
     },
     {
       "id": "vision",
       "name": "Synthetic receipt vision",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Extract known amounts from an image without using personal data.",
       "target": "Spark NVFP4"
     },
     {
       "id": "context",
       "name": "Long-context retrieval",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Check known facts at several positions in 8K, 32K and near-64K contexts.",
       "target": "Spark NVFP4"
     },
     {
       "id": "cancel",
       "name": "Client cancellation and recovery",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Ensure disconnected streams release work and the next request succeeds.",
       "target": "Spark NVFP4"
     },
     {
       "id": "restart",
       "name": "Service restart recovery",
-      "status": "blocked: awaiting Spark runtime",
+      "status": "pending runtime readiness",
       "purpose": "Confirm pinned weights, private binding, authentication and readiness survive a controlled restart.",
       "target": "Spark NVFP4"
     }
