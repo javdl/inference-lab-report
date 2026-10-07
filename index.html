@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T06:24:18.871034+00:00",
+  "updated_at": "2026-10-07T06:26:48.572192+00:00",
   "status": "Spark NVFP4 deployment preparing; administrator handoff required",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -222,6 +222,23 @@
       "prompt_tokens": 8082,
       "status": "passed",
       "wall_seconds": 3.844
+    },
+    {
+      "api": "Ollama native Chat API over SSH; not a Hermes end-to-end run",
+      "completion_tokens": 47,
+      "id": "j9-extra-context-32000",
+      "kind": "measured",
+      "label": "j9: 32K-context retrieval",
+      "note": "Three synthetic facts near the beginning, middle and end amid repeated-word padding. Token count is server-reported. Prefix cache was not flushed between runs; not a cold-prefill or realistic document-quality benchmark.",
+      "output": {
+        "central": "amber-82063",
+        "north": "violet-39417",
+        "south": "silver-15692"
+      },
+      "prompt_evaluation_seconds": 11.995,
+      "prompt_tokens": 32082,
+      "status": "passed",
+      "wall_seconds": 13.264
     }
   ],
   "validation_coverage": [
@@ -254,7 +271,8 @@
     "service": "Launcher and systemd user unit installed; syntax and unit validation passed. Not enabled or started; Docker authorization remains required.",
     "credential": "256-bit random API key generated locally in an owner-only file; enforcement awaits server startup.",
     "capacity_note": "Four active sequences is a scheduler limit, not proof that four full-context requests fit without KV-cache preemption.",
-    "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested."
+    "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested.",
+    "configuration_commit": "2ac0c88 (pushed to the private configuration repository)"
   },
   "upstream_benchmarks": {
     "source": "https://github.com/MiaAI-Lab/Unsloth-Qwen3.6-35b-NVFP4-DGX-Spark",
