@@ -43,8 +43,8 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T18:01:25.053149+00:00",
-  "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
+  "updated_at": "2026-10-07T18:02:55.819951+00:00",
+  "status": "j9 and Spark running; Spark functional and recovery checks in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -598,6 +598,17 @@
       },
       "note": "Three facts among repeated-word padding. Not a realistic-document benchmark; prefix caches were not flushed.",
       "wall_seconds": 6.3867
+    },
+    {
+      "id": "spark-hermes",
+      "label": "Spark: real Hermes workflow",
+      "kind": "measured",
+      "status": "passed",
+      "hermes_seconds": 50.31,
+      "tool_calls": 9,
+      "validation_scenarios": 2,
+      "input_files_preserved": true,
+      "note": "Isolated Radon client over encrypted SSH tunnels. Original and unseen inputs passed independent checks; normal Hermes configuration unchanged."
     }
   ],
   "validation_coverage": [
@@ -626,16 +637,17 @@
     "weight_shards": 6,
     "weight_bytes": 26489446568,
     "max_batched_tokens": 8192,
-    "private_route": "Configured: HTTPS for /v1 only; certificate verified; non-API root returns 404. API returns 502 while backend is not started.",
+    "private_route": "Verified cross-machine private HTTPS: authorized model discovery succeeds; missing and incorrect keys return HTTP 401.",
     "service": "Enabled persistent user service; model loaded and readiness reached after 371 seconds",
-    "credential": "256-bit random API key generated locally in an owner-only file; enforcement awaits server startup.",
+    "credential": "256-bit random API key in an owner-only file; authenticated discovery and generation verified.",
     "capacity_note": "Four active sequences is a scheduler limit, not proof that four full-context requests fit without KV-cache preemption.",
     "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested.",
-    "configuration_commit": "2ac0c88 (pushed to the private configuration repository)",
+    "configuration_commit": "33ff461 (pushed to the private configuration repository)",
     "weight_integrity": "All six shards independently verified against the pinned upstream SHA-256 and size metadata",
-    "runtime_verified": false,
+    "runtime_verified": true,
     "runtime_versions": "PyTorch 2.11.0+cu130; CUDA 13.0; vLLM 0.26.1.dev0+gf2654939e.d20260726.cu132; FlashInfer 0.6.14",
-    "observed_backends": "NVFP4 linear and MoE: FlashInfer CUTLASS; FP8 MoE: Triton; attention: FlashInfer. The image falls back from the requested b12x linear selector."
+    "observed_backends": "NVFP4 linear and MoE: FlashInfer CUTLASS; FP8 MoE: Triton; attention: FlashInfer. The image falls back from the requested b12x linear selector.",
+    "hermes_credentials": "Custom provider requires an endpoint-scoped key_env; the isolated client uses SPARK_API_KEY, not an unscoped cloud-provider key."
   },
   "upstream_benchmarks": {
     "source": "https://github.com/MiaAI-Lab/Unsloth-Qwen3.6-35b-NVFP4-DGX-Spark",
@@ -657,7 +669,7 @@
     {
       "id": "hermes",
       "name": "Real Hermes tool use",
-      "status": "pending runtime readiness",
+      "status": "passed",
       "purpose": "Reuse the validated synthetic workflow and independently check unseen inputs.",
       "target": "Spark NVFP4"
     },
@@ -678,28 +690,28 @@
     {
       "id": "vision",
       "name": "Synthetic receipt vision",
-      "status": "pending runtime readiness",
+      "status": "pending verification",
       "purpose": "Extract known amounts from an image without using personal data.",
       "target": "Spark NVFP4"
     },
     {
       "id": "context",
       "name": "Long-context retrieval",
-      "status": "pending runtime readiness",
+      "status": "pending verification",
       "purpose": "Check known facts at several positions in 8K, 32K and near-64K contexts.",
       "target": "Spark NVFP4"
     },
     {
       "id": "cancel",
       "name": "Client cancellation and recovery",
-      "status": "pending runtime readiness",
+      "status": "pending verification",
       "purpose": "Ensure disconnected streams release work and the next request succeeds.",
       "target": "Spark NVFP4"
     },
     {
       "id": "restart",
       "name": "Service restart recovery",
-      "status": "pending runtime readiness",
+      "status": "pending verification",
       "purpose": "Confirm pinned weights, private binding, authentication and readiness survive a controlled restart.",
       "target": "Spark NVFP4"
     }
@@ -799,9 +811,15 @@ try {
   const deployment = data.spark_deployment || {};
   const decode = measurements.find(item => item.id === 'j9-final-decode');
   const workflow = measurements.find(item => item.id === 'j9-final-hermes');
-  if (decode && decode.generation_tokens_per_second != null) metric(decode.generation_tokens_per_second,'tokens/s','Bounded decode sample',decode.note);
-  if (workflow && workflow.hermes_seconds != null) metric(workflow.hermes_seconds,'seconds','Final Hermes workflow',[workflow.tool_calls != null ? number(workflow.tool_calls)+' tool calls' : null,workflow.validation_scenarios != null ? number(workflow.validation_scenarios)+' validation scenarios' : null].filter(Boolean).join(' · '));
-  if (model.gpu_residency_percent != null) metric(model.gpu_residency_percent,'% GPU','Selected model residency',model.context_tokens != null ? number(model.context_tokens)+'-token configured context. Residency is not a retrieval-quality result.' : 'Recorded model residency.');
+  if (decode && decode.generation_tokens_per_second != null) metric(decode.generation_tokens_per_second,'tokens/s','j9 · bounded decode sample',decode.note);
+  if (workflow && workflow.hermes_seconds != null) metric(workflow.hermes_seconds,'seconds','j9 · Hermes workflow',[workflow.tool_calls != null ? number(workflow.tool_calls)+' tool calls' : null,workflow.validation_scenarios != null ? number(workflow.validation_scenarios)+' validation scenarios' : null].filter(Boolean).join(' · '));
+  if (model.gpu_residency_percent != null) metric(model.gpu_residency_percent,'% GPU','j9 · selected model residency',model.context_tokens != null ? number(model.context_tokens)+'-token configured context. Residency is not a retrieval-quality result.' : 'Recorded model residency.');
+  const sparkDecode = measurements.find(item => item.id === 'spark-concurrency-1');
+  const sparkWorkflow = measurements.find(item => item.id === 'spark-hermes');
+  const sparkConcurrent = measurements.find(item => item.id === 'spark-concurrency-4');
+  if (sparkDecode?.samples?.[0]?.generation_tokens_per_second != null) metric(sparkDecode.samples[0].generation_tokens_per_second,'tokens/s','Spark · bounded decode sample','One 256-token counting stream; decode excludes first-token latency. Different model and workload from the j9 sample.');
+  if (sparkWorkflow?.hermes_seconds != null) metric(sparkWorkflow.hermes_seconds,'seconds','Spark · Hermes workflow',sparkWorkflow.note);
+  if (sparkConcurrent?.aggregate_tokens_per_second != null) metric(sparkConcurrent.aggregate_tokens_per_second,'tokens/s','Spark · four-client aggregate','Four concurrent 256-token streams; includes prefill and queueing. One bounded sample, not a sustained-load benchmark.');
   if (deployment.state) callout(byId('overview-note'),'Spark NVFP4: '+deployment.state,deployment.blocker || deployment.security,stateType(deployment.state));
   (data.hardware || []).forEach(machine => {
     const card = el('article',null,'card'); const heading = el('div',null,'hardware-name');
