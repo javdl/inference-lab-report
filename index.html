@@ -43,8 +43,8 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T06:29:55.669542+00:00",
-  "status": "Spark NVFP4 deployment preparing; administrator handoff required",
+  "updated_at": "2026-10-07T06:38:36.776063+00:00",
+  "status": "Seven additional j9 checks passed; Spark NVFP4 awaiting Docker authorization",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -75,8 +75,8 @@
     "flash_attention": true,
     "speculative_decoding": false,
     "gpu_residency_percent": 100,
-    "gpu_used_mib": 22137,
-    "gpu_free_mib": 1971,
+    "gpu_used_mib": 22150,
+    "gpu_free_mib": 1958,
     "download_gb_approx": 17.8
   },
   "measurements": [
@@ -268,6 +268,49 @@
       "recovery_seconds": 0.167,
       "status": "passed",
       "wall_seconds": 0.592
+    },
+    {
+      "api": "Ollama native Chat API over SSH; not a Hermes end-to-end run",
+      "completion_tokens": 45,
+      "expected": {
+        "code": "ALPHA-407",
+        "currency": "EUR",
+        "item_count": 3,
+        "total_cents": 850
+      },
+      "id": "j9-extra-vision",
+      "kind": "measured",
+      "label": "j9: synthetic receipt vision",
+      "note": "A synthetic 640x420 receipt: text extraction, exact total, and item quantities. No personal image or receipt was used.",
+      "output": {
+        "code": "ALPHA-407",
+        "currency": "EUR",
+        "item_count": 3,
+        "total_cents": 850
+      },
+      "prompt_tokens": 303,
+      "status": "passed",
+      "wall_seconds": 2.725
+    },
+    {
+      "id": "spark-weight-integrity",
+      "kind": "measured",
+      "label": "Spark: pinned model integrity",
+      "status": "passed",
+      "verified_shards": 6,
+      "verified_weight_bytes": 26489446568,
+      "note": "Independently computed SHA-256 and file size for every safetensors shard; all matched Hugging Face LFS metadata at the pinned revision. This verifies downloaded artifacts, not GPU/runtime compatibility."
+    },
+    {
+      "id": "j9-post-validation-residency",
+      "kind": "measured",
+      "label": "j9: GPU residency after validation",
+      "status": "passed",
+      "context_tokens": 65536,
+      "gpu_percent": 100,
+      "gpu_used_mib": 22150,
+      "gpu_free_mib": 1958,
+      "note": "After long-context and vision workloads, Ollama still reported size = size_vram = 18,939,715,255 bytes."
     }
   ],
   "validation_coverage": [
@@ -301,7 +344,9 @@
     "credential": "256-bit random API key generated locally in an owner-only file; enforcement awaits server startup.",
     "capacity_note": "Four active sequences is a scheduler limit, not proof that four full-context requests fit without KV-cache preemption.",
     "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested.",
-    "configuration_commit": "2ac0c88 (pushed to the private configuration repository)"
+    "configuration_commit": "2ac0c88 (pushed to the private configuration repository)",
+    "weight_integrity": "All six shards independently verified against the pinned upstream SHA-256 and size metadata",
+    "runtime_verified": false
   },
   "upstream_benchmarks": {
     "source": "https://github.com/MiaAI-Lab/Unsloth-Qwen3.6-35b-NVFP4-DGX-Spark",
@@ -316,50 +361,58 @@
     {
       "id": "health-auth",
       "name": "Readiness and API authentication",
-      "status": "planned",
-      "purpose": "Require authorized model discovery and reject unauthorized inference."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Require authorized model discovery and reject unauthorized inference.",
+      "target": "Spark NVFP4"
     },
     {
       "id": "hermes",
       "name": "Real Hermes tool use",
-      "status": "planned",
-      "purpose": "Reuse the validated synthetic workflow and independently check unseen inputs."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Reuse the validated synthetic workflow and independently check unseen inputs.",
+      "target": "Spark NVFP4"
     },
     {
       "id": "concurrency",
       "name": "Streaming latency and concurrency",
-      "status": "planned",
-      "purpose": "Measure first-token latency, decode throughput and fairness at one and four active requests; eight clients test queueing, not eight active slots."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Measure first-token latency, decode throughput and fairness at one and four active requests; eight clients test queueing, not eight active slots.",
+      "target": "Spark NVFP4"
     },
     {
       "id": "structured",
       "name": "Structured JSON and tool arguments",
-      "status": "planned",
-      "purpose": "Validate required fields, numeric values, tool-result follow-up and schema adherence."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Validate required fields, numeric values, tool-result follow-up and schema adherence.",
+      "target": "Spark NVFP4"
     },
     {
       "id": "vision",
       "name": "Synthetic receipt vision",
-      "status": "planned",
-      "purpose": "Extract known amounts from an image without using personal data."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Extract known amounts from an image without using personal data.",
+      "target": "Spark NVFP4"
     },
     {
       "id": "context",
       "name": "Long-context retrieval",
-      "status": "planned",
-      "purpose": "Check known facts at several positions in 8K, 32K and near-64K contexts."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Check known facts at several positions in 8K, 32K and near-64K contexts.",
+      "target": "Spark NVFP4"
     },
     {
       "id": "cancel",
       "name": "Client cancellation and recovery",
-      "status": "planned",
-      "purpose": "Ensure disconnected streams release work and the next request succeeds."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Ensure disconnected streams release work and the next request succeeds.",
+      "target": "Spark NVFP4"
     },
     {
       "id": "restart",
       "name": "Service restart recovery",
-      "status": "planned",
-      "purpose": "Confirm pinned weights, private binding, authentication and readiness survive a controlled restart."
+      "status": "blocked: awaiting Spark runtime",
+      "purpose": "Confirm pinned weights, private binding, authentication and readiness survive a controlled restart.",
+      "target": "Spark NVFP4"
     }
   ],
   "sources": [
