@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T17:50:39.878997+00:00",
+  "updated_at": "2026-10-07T17:54:17.281395+00:00",
   "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -337,6 +337,46 @@
       "status": "passed",
       "uid": 1000,
       "note": "Cache write/delete and the real GPU compatibility verifier passed with the service capability restrictions and matching host UID."
+    },
+    {
+      "id": "spark-health-initial",
+      "label": "Spark: initial exact-token smoke check",
+      "kind": "measured",
+      "status": "failed",
+      "note": "Authentication and model discovery succeeded, but the prompt “Reply exactly READY.” returned “READY.” instead of the asserted “READY”. The revised probe explicitly forbids punctuation; this does not change the service."
+    },
+    {
+      "id": "spark-private-auth",
+      "label": "Spark: private HTTPS authentication",
+      "kind": "measured",
+      "status": "passed",
+      "http_statuses": {
+        "missing": 401,
+        "incorrect": 401,
+        "valid": 200
+      },
+      "note": "Cross-machine HTTPS: missing and incorrect API keys rejected; valid key accepted. No public forwarding configured."
+    },
+    {
+      "id": "spark-structured",
+      "label": "Spark NVFP4: structured",
+      "kind": "measured",
+      "status": "passed",
+      "output": {
+        "currency": "EUR",
+        "net_cents": -345,
+        "transaction_ids": [
+          "p1",
+          "r2"
+        ]
+      },
+      "usage": {
+        "prompt_tokens": 59,
+        "total_tokens": 105,
+        "completion_tokens": 46,
+        "prompt_tokens_details": null
+      },
+      "wall_seconds": 1.956
     }
   ],
   "validation_coverage": [
@@ -349,7 +389,7 @@
     "Input files preserved"
   ],
   "spark_deployment": {
-    "state": "Loading model; corrected non-root wrapper verified",
+    "state": "Running; functional verification in progress",
     "model": "unsloth/Qwen3.6-35B-A3B-NVFP4",
     "model_revision": "739af1e7aac320af1682ed1e0cce369af4c5265d",
     "recipe_revision": "79c9e6f359f6101cdacd0dfd6fe9861ae2493a4d",
@@ -366,7 +406,7 @@
     "weight_bytes": 26489446568,
     "max_batched_tokens": 8192,
     "private_route": "Configured: HTTPS for /v1 only; certificate verified; non-API root returns 404. API returns 502 while backend is not started.",
-    "service": "Enabled service is loading the pinned weights; non-root cache writes and GPU access verified",
+    "service": "Enabled persistent user service; model loaded and readiness reached after 371 seconds",
     "credential": "256-bit random API key generated locally in an owner-only file; enforcement awaits server startup.",
     "capacity_note": "Four active sequences is a scheduler limit, not proof that four full-context requests fit without KV-cache preemption.",
     "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested.",
