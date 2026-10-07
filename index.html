@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T17:54:17.281395+00:00",
+  "updated_at": "2026-10-07T17:54:51.091475+00:00",
   "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -377,6 +377,24 @@
         "prompt_tokens_details": null
       },
       "wall_seconds": 1.956
+    },
+    {
+      "id": "spark-health",
+      "label": "Spark NVFP4: health",
+      "kind": "measured",
+      "status": "passed",
+      "unauthorized_statuses": {
+        "/v1/models": 401,
+        "/v1/chat/completions": 401
+      },
+      "authorized_generation": "READY",
+      "usage": {
+        "prompt_tokens": 21,
+        "total_tokens": 23,
+        "completion_tokens": 2,
+        "prompt_tokens_details": null
+      },
+      "wall_seconds": 0.1377
     }
   ],
   "validation_coverage": [
@@ -429,7 +447,7 @@
     {
       "id": "health-auth",
       "name": "Readiness and API authentication",
-      "status": "pending runtime readiness",
+      "status": "passed",
       "purpose": "Require authorized model discovery and reject unauthorized inference.",
       "target": "Spark NVFP4"
     },
