@@ -43,7 +43,7 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T17:58:02.320151+00:00",
+  "updated_at": "2026-10-07T17:58:16.212886+00:00",
   "status": "Docker authorized; Spark pinned image pull and runtime validation in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
@@ -452,6 +452,46 @@
       "kind": "measured",
       "status": "failed",
       "note": "Authenticated discovery through the tunnel passed, but Hermes provider resolution sent a rejected credential. No workflow tools ran; inspecting the isolated provider config."
+    },
+    {
+      "id": "spark-concurrency-4",
+      "label": "Spark NVFP4: concurrency-4",
+      "kind": "measured",
+      "status": "passed",
+      "clients": 4,
+      "samples": [
+        {
+          "request": 0,
+          "ttft_seconds": 2.3851,
+          "wall_seconds": 6.2647,
+          "completion_tokens": 256,
+          "generation_tokens_per_second": 65.73
+        },
+        {
+          "request": 1,
+          "ttft_seconds": 1.9974,
+          "wall_seconds": 6.2177,
+          "completion_tokens": 256,
+          "generation_tokens_per_second": 60.42
+        },
+        {
+          "request": 2,
+          "ttft_seconds": 2.3831,
+          "wall_seconds": 6.2632,
+          "completion_tokens": 256,
+          "generation_tokens_per_second": 65.72
+        },
+        {
+          "request": 3,
+          "ttft_seconds": 2.3829,
+          "wall_seconds": 6.2626,
+          "completion_tokens": 256,
+          "generation_tokens_per_second": 65.73
+        }
+      ],
+      "aggregate_tokens_per_second": 163.42,
+      "note": "256-token streaming requests. Aggregate includes prefill and queueing; per-stream decode excludes time to first token. Eight clients test queueing behind a four-sequence limit.",
+      "wall_seconds": 6.2663
     }
   ],
   "validation_coverage": [
