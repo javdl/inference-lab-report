@@ -43,8 +43,8 @@
 <footer class="footer"><div class="wrap"><p id="privacy"></p><a href="#top">Back to top</a></div></footer>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T18:09:16.300099+00:00",
-  "status": "Spark functional tests passed; controlled service restart is in progress",
+  "updated_at": "2026-10-07T18:10:16.462514+00:00",
+  "status": "j9 and Spark running; all eight Spark verification groups passed",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -661,6 +661,20 @@
       "recovery_seconds": 0.1407,
       "note": "One disconnected stream and a bounded follow-up; not a sustained cancellation stress test.",
       "wall_seconds": 0.3279
+    },
+    {
+      "id": "spark-restart",
+      "label": "Spark: controlled restart recovery",
+      "kind": "measured",
+      "status": "passed",
+      "restart_and_smoke_seconds": 258.22,
+      "post_restart_generation_seconds": 0.5913,
+      "http_statuses": {
+        "missing": 401,
+        "incorrect": 401,
+        "valid": 200
+      },
+      "note": "Systemd restart reached readiness; authenticated discovery and generation passed, and missing/incorrect keys were rejected again. This was not a host reboot."
     }
   ],
   "validation_coverage": [
@@ -673,7 +687,7 @@
     "Input files preserved"
   ],
   "spark_deployment": {
-    "state": "Running; functional verification in progress",
+    "state": "Running; verification passed",
     "model": "unsloth/Qwen3.6-35B-A3B-NVFP4",
     "model_revision": "739af1e7aac320af1682ed1e0cce369af4c5265d",
     "recipe_revision": "79c9e6f359f6101cdacd0dfd6fe9861ae2493a4d",
@@ -690,7 +704,7 @@
     "weight_bytes": 26489446568,
     "max_batched_tokens": 8192,
     "private_route": "Verified cross-machine private HTTPS: authorized model discovery succeeds; missing and incorrect keys return HTTP 401.",
-    "service": "Enabled with user lingering; PAIR remains active. Controlled restart verification is in progress.",
+    "service": "Enabled user service with lingering. Controlled restart, authenticated generation and private HTTPS recovery passed.",
     "credential": "256-bit random API key in an owner-only file; authenticated discovery and generation verified.",
     "capacity_note": "Four active sequences is a scheduler limit, not proof that four full-context requests fit without KV-cache preemption.",
     "provenance_note": "Image digest and ARM64 manifest verified; source-to-image reproducibility is not attested.",
@@ -699,7 +713,10 @@
     "runtime_verified": true,
     "runtime_versions": "PyTorch 2.11.0+cu130; CUDA 13.0; vLLM 0.26.1.dev0+gf2654939e.d20260726.cu132; FlashInfer 0.6.14",
     "observed_backends": "NVFP4 linear and MoE: FlashInfer CUTLASS; FP8 MoE: Triton; attention: FlashInfer. The image falls back from the requested b12x linear selector.",
-    "hermes_credentials": "Custom provider requires an endpoint-scoped key_env; the isolated client uses SPARK_API_KEY, not an unscoped cloud-provider key."
+    "hermes_credentials": "Custom provider requires an endpoint-scoped key_env; the isolated client uses SPARK_API_KEY, not an unscoped cloud-provider key.",
+    "startup_persistence": "Unit enabled and user lingering verified; controlled service restart tested, host reboot not performed.",
+    "paired_service": "Existing PAIR service remained active.",
+    "temporary_client": "Radon Hermes validated through temporary encrypted SSH tunnels; tunnels and isolated profile/credential copy removed."
   },
   "upstream_benchmarks": {
     "source": "https://github.com/MiaAI-Lab/Unsloth-Qwen3.6-35b-NVFP4-DGX-Spark",
@@ -763,7 +780,7 @@
     {
       "id": "restart",
       "name": "Service restart recovery",
-      "status": "pending verification",
+      "status": "passed",
       "purpose": "Confirm pinned weights, private binding, authentication and readiness survive a controlled restart.",
       "target": "Spark NVFP4"
     }
