@@ -15,6 +15,7 @@
 @media(max-width:900px){.grid{grid-template-columns:1fr 1fr}.model-map .card:last-child{grid-column:1/-1}.hero{padding-top:44px}.section-head{display:block}.section-head>.badge{margin-top:14px}}
 @media(max-width:600px){.wrap{padding:0 20px}.hero{padding-top:36px}.hero-footer{display:block}.button{margin-top:20px}.grid,.two{grid-template-columns:1fr}.model-map .card:last-child{grid-column:auto}.card{padding:20px}section{margin-top:44px}.fact{grid-template-columns:1fr;gap:4px}.coverage{columns:1}.metric-value{font-size:32px}.bar-row{grid-template-columns:66px minmax(0,1fr) 58px;gap:8px}.intro{font-size:16px}}
 .model-map{grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}.model-map .card:last-child{grid-column:auto}.comparison-table{min-width:1150px}.comparison-table td,.comparison-table tbody th{vertical-align:top}.comparison-table th:first-child,.comparison-table td:first-child{position:sticky;left:0;z-index:1;background:var(--surface);min-width:225px;max-width:270px}.comparison-table thead th:first-child{z-index:2}.comparison-table tbody th{font:inherit;text-align:left;text-transform:none;letter-spacing:0}.comparison-table .score{display:block;font:500 22px/1.25 var(--mono);margin-bottom:8px}.comparison-table .method{display:block;font-size:12px;line-height:1.5;color:var(--muted);max-width:180px}.comparison-table tr.local>:first-child{border-left:3px solid var(--primary)}.comparison-table .source-label{font-size:11px}.comparison-notes{margin-top:20px}.comparison-notes li+li{margin-top:10px}
+.comparison-table .route-cell{min-width:190px;max-width:230px}
 @media print{body{background:#fff;color:#000;font-size:10pt}.wrap{max-width:none;padding:0}.nav,.button,.filters,.skip,.topline{display:none}.hero{padding:0 0 20px}h1{font-size:32pt}section{margin-top:26px}.card{break-inside:avoid;background:#fff}.table-shell{overflow:visible}table{min-width:0;font-size:8pt}th,td{padding:8px}tr{break-inside:avoid}.identity code{color:#000}.grid{gap:10px}.footer{margin-top:24px}.bar{background:#1a2ffb;print-color-adjust:exact}.coverage{columns:2}}
 </style>
 </head>
@@ -23,14 +24,15 @@
 <div class="wrap">
 <div class="topline label"><a href="https://www.joostvanderlaan.nl/">Joost van der Laan</a><a href="https://www.joostvanderlaan.nl/html-effectiveness/">HTML Effectiveness / field report</a></div>
 <header class="hero"><p class="eyebrow">Local inference · measured, not assumed</p><h1 id="report-title">Local inference lab</h1><p class="intro">Qwen3.6 and Qwen3.8 on j9 and Spark. Each result names its model, runtime and measurement method. Local measurements sit beside—not in place of—published reference scores.</p><div class="hero-footer"><div><p id="report-status"></p><time id="updated" class="updated"></time></div><button id="download" class="button" disabled>Download public data</button></div></header>
-<nav class="nav" aria-label="Report sections"><a href="#models">01 Models</a><a href="#comparison">Compare scores</a><a href="#results">02 Results</a><a href="#pair">03 PAIR</a><a href="#experiments">04 Experiments</a><a href="#configuration">05 Configuration</a><a href="#validation">06 Verification</a><a href="#hardware">07 Machines</a><a href="#sources">08 Sources</a></nav>
+<nav class="nav" aria-label="Report sections"><a href="#models">01 Models</a><a href="#routes">Benchmark routes</a><a href="#comparison">Compare scores</a><a href="#results">02 Results</a><a href="#pair">03 PAIR</a><a href="#experiments">04 Experiments</a><a href="#configuration">05 Configuration</a><a href="#validation">06 Verification</a><a href="#hardware">07 Machines</a><a href="#sources">08 Sources</a></nav>
 <main id="main"><noscript>This report needs JavaScript to render its embedded data. The HTML contains the full public JSON record; no network request is needed to render it.</noscript><div id="render-error" class="error hidden" role="alert"></div>
 <section id="models"><div class="section-head"><div><span class="section-index">01 / Know the setup</span><h2>The model is part of the result.</h2><p>27B and 35B-A3B are different models. GGUF and NVFP4 are different weight formats. PAIR is a router, not a model; Hermes and Codex are clients.</p></div></div><div id="model-map" class="grid model-map"></div><details><summary>Earlier j9 tuning configurations—kept separate from the selected model settings</summary><div id="historical-models" class="grid"></div></details></section>
+<section id="routes"><div class="section-head"><div><span class="section-index">Method / Request paths</span><h2>Both PAIR and direct endpoints—not a route A/B test.</h2><p>Host, client location, request route and lifecycle owner are separate facts. “Bypasses PAIR” does not mean the benchmark client ran on the GPU machine, or that no gateway was involved.</p></div></div><div id="route-overview" class="grid two"></div></section>
 <section id="comparison">
 <div class="section-head"><div><span class="section-index">Comparison / Local + published</span><h2>All scores, with their conditions.</h2><p>Local runs, 0xSero’s registry recipes and other attributed references. Read the method under each number: bounded decode, streamed text and aggregate output are different measurements.</p></div></div>
 <div class="table-shell" tabindex="0" role="region" aria-label="Model comparison scores; scroll horizontally to compare all columns">
 <table class="comparison-table"><caption>Blue row markers identify our measurements. — means not measured or not published, never zero. Context is not a quality score.</caption>
-<thead><tr><th scope="col">Model / setup</th><th scope="col">Evidence</th><th scope="col">Decode tokens/s</th><th scope="col">Input tokens/s</th><th scope="col">Context tokens</th><th scope="col">Checks</th><th scope="col">Agent seconds</th><th scope="col">Aggregate tokens/s</th></tr></thead><tbody id="comparison-rows"></tbody></table>
+<thead><tr><th scope="col">Model / setup</th><th scope="col">Evidence</th><th scope="col">Request route</th><th scope="col">Decode tokens/s</th><th scope="col">Input tokens/s</th><th scope="col">Context tokens</th><th scope="col">Checks</th><th scope="col">Agent seconds</th><th scope="col">Aggregate tokens/s</th></tr></thead><tbody id="comparison-rows"></tbody></table>
 </div><div class="card comparison-notes"><h3>What the comparison supports</h3><ul id="comparison-notes" class="compact"></ul></div>
 </section>
 <section id="results"><div class="section-head"><div><span class="section-index">02 / Measured locally</span><h2>Results with their model attached.</h2><p>Short, bounded samples. Different models and routes are not a controlled hardware comparison. Decode speed excludes first-token latency; workflow time includes tool work.</p></div></div><div id="result-cards" class="grid"></div><div id="concurrency" class="card" style="margin-top:20px"></div></section>
@@ -44,8 +46,8 @@
 </div>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-07T21:14:08.820508+00:00",
-  "status": "Qwen3.8 measured; local and registry comparison added; full-context limit recorded",
+  "updated_at": "2026-10-08T12:18:24.088965+00:00",
+  "status": "Benchmark routes clarified; measured scores unchanged; lifecycle caveat recorded",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -1915,6 +1917,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Bypasses PAIR and Aperture",
+          "detail": "Remote harness → private HTTPS → authenticated Local AI gateway → SGLang on j9."
         }
       },
       {
@@ -1948,6 +1954,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Bypasses PAIR and Aperture",
+          "detail": "Same j9 gateway/SGLang path; different legacy measurement method."
         }
       },
       {
@@ -1981,6 +1991,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "PAIR for decode / Hermes",
+          "detail": "48.97 tok/s and 51.04 s used PAIR → j9 Ollama. Supplemental API checks did not retain the proxy path."
         }
       },
       {
@@ -2014,6 +2028,10 @@
         "aggregate": {
           "value": 228.19,
           "note": "C8 aggregate; C1=95.43, C4=163.42; 256 tokens/client."
+        },
+        "route": {
+          "label": "Bypasses PAIR",
+          "detail": "vLLM on Spark: local API probes; Hermes from Radon over encrypted SSH. Private HTTPS auth checked separately."
         }
       },
       {
@@ -2047,6 +2065,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "PAIR → Ollama cluster",
+          "detail": "Codex from Radon; earlier Spark GGUF baseline. Responses 404s; per-request selected-node trace not retained."
         }
       },
       {
@@ -2080,6 +2102,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Model-fit inspection",
+          "detail": "GPU/CPU residency observation; no inference request route recorded."
         }
       },
       {
@@ -2113,6 +2139,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Hermes → PAIR → j9",
+          "detail": "Historical Ollama configuration rejected by Hermes for insufficient context."
         }
       },
       {
@@ -2146,6 +2176,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Hermes → PAIR → j9",
+          "detail": "Historical Ollama workflow with CPU spill."
         }
       },
       {
@@ -2180,6 +2214,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Publisher’s environment",
+          "detail": "External reference, not a run through our PAIR or Aperture stack; see source."
         }
       },
       {
@@ -2214,6 +2252,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Publisher’s environment",
+          "detail": "External reference, not a run through our PAIR or Aperture stack; see source."
         }
       },
       {
@@ -2248,6 +2290,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Publisher’s environment",
+          "detail": "External reference, not a run through our PAIR or Aperture stack; see source."
         }
       },
       {
@@ -2282,6 +2328,10 @@
         "aggregate": {
           "value": 317.0,
           "note": "C8 aggregate; 500 tokens/client; source max 24 active slots."
+        },
+        "route": {
+          "label": "Publisher’s environment",
+          "detail": "External reference, not a run through our PAIR or Aperture stack; see source."
         }
       },
       {
@@ -2316,6 +2366,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Publisher’s environment",
+          "detail": "External reference, not a run through our PAIR or Aperture stack; see source."
         }
       },
       {
@@ -2350,6 +2404,10 @@
         "aggregate": {
           "value": null,
           "note": ""
+        },
+        "route": {
+          "label": "Publisher’s environment",
+          "detail": "External reference, not a run through our PAIR or Aperture stack; see source."
         }
       }
     ],
@@ -2363,7 +2421,25 @@
       "Spark 95.1 tok/s and 317.0 aggregate are MiaAI-Lab’s published results, not personal 0xSero measurements. LocalMaxxing 46.64/101 are archived observations with unidentified submitters, not current registry acceptance.",
       "Current recipe summaries contain proof hashes, but their target raw September 28 run files were not available in the inspected registry snapshot. Missing values remain missing. Historical rejected configurations are retained."
     ]
-  }
+  },
+  "route_evidence": [
+    {
+      "title": "No measured PAIR overhead",
+      "detail": "The report combines PAIR-routed Ollama runs with PAIR-bypassing SGLang and vLLM runs. We did not run the same model, runtime, prompt and settings through both routes as a controlled A/B test. Differences in these scores cannot quantify PAIR overhead."
+    },
+    {
+      "title": "Where the benchmark clients ran",
+      "detail": "Qwen3.8 throughput was measured from a remote harness through private HTTPS and the Local AI gateway into SGLang on j9, bypassing PAIR and Aperture. Spark NVFP4 used local vLLM API probes; its Hermes workflow ran from Radon through encrypted SSH. Some supplemental j9 native-API tests retained no proxy-path evidence; those remain unknown."
+    },
+    {
+      "title": "Aperture checks were functional, not speed tests",
+      "detail": "Separate Aperture → PAIR chat/tool checks and an Aperture → Qwen3.8 chat check succeeded. These establish connectivity and selected API behavior, not throughput or routing overhead. They are not the paths measured by the Qwen3.8 speed rows."
+    },
+    {
+      "title": "Inference success ≠ lifecycle verification",
+      "detail": "Later inspection on 2026-10-08 found plugin-owned Qwen3.8 containers running while Local AI 6.0.1 retained a stopping entry dated 2026-09-27. A real plugin snapshot reported stopped unexpectedly. The earlier scores remain recorded inference measurements; plugin stop/start, UI-state recovery and endpoint continuity were not validated. This is a dated observation, not live status."
+    }
+  ]
 }</script>
 <script>
 (function(){
@@ -2385,12 +2461,14 @@ const run=id=>{const r=runs.find(r=>r.id===id);if(!r)throw new Error('Missing ru
 const config=id=>{const c=configs.get(id);if(!c)throw new Error('Missing configuration '+id);return c;};
 byId('report-title').textContent=data.title;byId('report-status').textContent=data.status;byId('updated').dateTime=data.updated_at;byId('updated').textContent='Snapshot · '+new Date(data.updated_at).toISOString().replace('T',' ').replace(/\.\d+Z$/,' UTC');byId('privacy').textContent=data.privacy;
 data.configurations.forEach(c=>{const card=el('article',null,'card');card.append(el('p',c.host+' / '+c.runtime,'label'),el('h3',c.model));identity(card,c);card.append(badge(c.state));const d={weights:c.weights};for(const k of ['kv_cache','context_tokens','speculative_decoding'])if(k in c)d[k]=c[k];fields(card,d);if(c.note)card.append(el('p',c.note,'note'));byId(c.historical?'historical-models':'model-map').append(card);const option=el('option',c.label);option.value=c.id;byId('configuration-filter').append(option);});
+data.route_evidence.forEach(item=>{const card=el('article',null,'card');card.append(el('h3',item.title),el('p',item.detail));byId('route-overview').append(card);});
 const selections=[['j9-q8-final','j9-final-decode','j9-final-hermes'],['spark-gguf-pair',null,'spark-gguf-baseline'],['spark-nvfp4-vllm','spark-concurrency-1','spark-hermes']];
 for(const [id,decodeId,workflowId] of selections){const c=config(id),card=el('article',null,'card');identity(card,c);const metrics=el('div',null,'metrics');if(decodeId){const r=run(decodeId);metric(metrics,r.generation_tokens_per_second??r.samples[0].generation_tokens_per_second,'tokens/s','Bounded decode');}else metric(metrics,8,'of 8 tests','Behavior checks');const w=run(workflowId);metric(metrics,w.hermes_seconds??w.agent_seconds,'seconds',id==='spark-gguf-pair'?'Codex workflow':'Hermes workflow');card.append(metrics,badge(w.status));card.append(el('p',id==='spark-gguf-pair'?'GGUF via PAIR. Task passed with Responses routing errors; this is not the NVFP4 result.':w.tool_calls+' tool calls; original and unseen inputs checked. '+(id==='j9-q8-final'?'Hermes and decode routed through PAIR.':'Hermes used encrypted SSH to vLLM; PAIR bypassed.'),'note'));byId('result-cards').append(card);}
 const concurrency=byId('concurrency');concurrency.append(el('h3','Spark NVFP4 · aggregate streaming output'));identity(concurrency,config('spark-nvfp4-vllm'));const samples=[1,4,8].map(n=>run('spark-concurrency-'+n)),max=Math.max(...samples.map(r=>r.aggregate_tokens_per_second));samples.forEach(r=>{const row=el('div',null,'bar-row'),track=el('div',null,'bar-track'),bar=el('div',null,'bar');bar.style.width=(r.aggregate_tokens_per_second/max*100)+'%';track.append(bar);row.append(el('span',r.clients+' clients'),track,el('span',number(r.aggregate_tokens_per_second)));concurrency.append(row);});concurrency.append(el('p','Tokens/s aggregate, including prefill and queueing. Each client generated 256 tokens. Eight clients shared four active slots. The single-client aggregate differs from decode-only speed above.','note'));
 for(const row of data.comparison.rows){
  const tr=el('tr',null,row.origin==='local'?'local':'external'),model=el('th');model.scope='row';model.append(el('p',row.model,'run-title'),el('code',row.setup),el('p',row.hardware,'method'));tr.append(model);
  const source=el('td');source.append(el('p',row.source,'label source-label'),el('span',row.evidence_class,'method'));if(row.url)source.append(link(row.url,'Source'));tr.append(source);
+ const route=el('td',null,'route-cell');route.append(el('p',row.route.label,'run-title'),el('span',row.route.detail,'method'));tr.append(route);
  for(const key of ['decode','input_rate','context','checks','agent','aggregate']){const td=el('td'),value=row[key];td.append(el('span',value?.value==null?'—':number(value.value),['decode','input_rate','agent','aggregate'].includes(key)?'score':''));if(value?.note)td.append(el('span',value.note,'method'));tr.append(td);}
  byId('comparison-rows').append(tr);
 }
