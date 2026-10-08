@@ -54,8 +54,8 @@
 </div>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-08T17:31:27.258323+00:00",
-  "status": "Simple throughput table added; Spark Qwen3.8 benchmark in progress",
+  "updated_at": "2026-10-08T18:47:45.268510+00:00",
+  "status": "Spark Qwen3.8 benchmark completed; original Qwen3.6 service restored",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -1089,6 +1089,321 @@
       "host": "j9",
       "runtime": "SGLang 0.5.20 + ExLlamaV3 1.5.1",
       "route": "Authenticated local-AI gateway → SGLang on j9; PAIR bypassed"
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark-qwen38-sglang",
+      "model": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+      "host": "Spark",
+      "runtime": "sglang 0.0.0.dev1+g708f51e44.d20260909; torch 2.15.0.dev20260818+cu134; transformers 5.12.1; tokenizers 0.22.2; flashinfer-python 0.6.18",
+      "route": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway",
+      "id": "spark-qwen38-lighthouse",
+      "label": "Spark Qwen3.8: three uncapped lighthouse streams",
+      "status": "Measured; variable speed",
+      "median_decode_tokens_per_second": 17.494570134172402,
+      "decode_range": [
+        13.958112731483432,
+        17.903146848817283
+      ],
+      "character_estimate_median_tokens_per_second": 15.270415847816851,
+      "samples": [
+        {
+          "rate_tps": 17.903146848817283,
+          "ttft_s": 0.19764191680587828,
+          "sample_tokens": 539,
+          "sample_interval_s": 30.106419500196353,
+          "sample_chars": 1925,
+          "sample_chars_div4_tokens": 481,
+          "sample_chars_div4_tps": 15.976659064252491,
+          "tokens_total": 5967,
+          "duration_s": 269.18099333392456,
+          "finish_reason": "stop",
+          "done": true,
+          "last_minus_first_s": 268.96095187519677,
+          "usage": {},
+          "request": {
+            "model": "qwen3.8-27b-spark-nvfp4",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a detailed 600-word story about a lighthouse keeper."
+              }
+            ],
+            "temperature": 0.8,
+            "stream": true
+          }
+        },
+        {
+          "rate_tps": 13.958112731483432,
+          "ttft_s": 0.7811953749042004,
+          "sample_tokens": 420,
+          "sample_interval_s": 30.089997375151142,
+          "sample_chars": 1737,
+          "sample_chars_div4_tokens": 434,
+          "sample_chars_div4_tps": 14.423397735434998,
+          "tokens_total": 12511,
+          "duration_s": 555.5958734590095,
+          "finish_reason": "stop",
+          "done": true,
+          "last_minus_first_s": 554.5420619170181,
+          "usage": {},
+          "request": {
+            "model": "qwen3.8-27b-spark-nvfp4",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a detailed 600-word story about a lighthouse keeper."
+              }
+            ],
+            "temperature": 0.8,
+            "stream": true
+          }
+        },
+        {
+          "rate_tps": 17.494570134172402,
+          "ttft_s": 0.17704125004820526,
+          "sample_tokens": 527,
+          "sample_interval_s": 30.123606625013053,
+          "sample_chars": 1842,
+          "sample_chars_div4_tokens": 460,
+          "sample_chars_div4_tps": 15.270415847816851,
+          "tokens_total": 11167,
+          "duration_s": 495.3029549161438,
+          "finish_reason": "stop",
+          "done": true,
+          "last_minus_first_s": 495.09528241702355,
+          "usage": {},
+          "request": {
+            "model": "qwen3.8-27b-spark-nvfp4",
+            "messages": [
+              {
+                "role": "user",
+                "content": "Write a detailed 600-word story about a lighthouse keeper."
+              }
+            ],
+            "temperature": 0.8,
+            "stream": true
+          }
+        }
+      ],
+      "tokenizer": {
+        "repo": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+        "revision": "009632fef96dd349150baa780c984e62e70e91fe",
+        "sha256": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3",
+        "library": "tokenizers 0.22.2",
+        "add_special_tokens": false,
+        "no_estimate_fallback": true
+      },
+      "note": "Exact pinned tokenizer; first ≥30 s after first nonempty piece; reasoning + content counted; no max_tokens; all finish=stop. One replicate was below the 15 tok/s lab floor. Chars/4 median 15.27 is only an estimate."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark-qwen38-sglang",
+      "model": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+      "host": "Spark",
+      "runtime": "sglang 0.0.0.dev1+g708f51e44.d20260909; torch 2.15.0.dev20260818+cu134; transformers 5.12.1; tokenizers 0.22.2; flashinfer-python 0.6.18",
+      "route": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway",
+      "id": "spark-qwen38-legacy",
+      "label": "Spark Qwen3.8: legacy default recreation",
+      "status": "Measured",
+      "median_decode_tokens_per_second": 16.835553803163016,
+      "decode_range": [
+        16.227596953150915,
+        17.72767240151018
+      ],
+      "samples": [
+        {
+          "started_at": "2026-10-08T18:05:25.158338Z",
+          "elapsed_ms": 37104.173874948174,
+          "ttft_ms": 276.78212500177324,
+          "decode_tok_s": 16.835553803163016,
+          "decode_method": "client_post_first_token_estimate",
+          "client_decode_ms": 36826.82537497021,
+          "client_decode_tok_s": 16.835553803163016,
+          "server_decode_tok_s": null,
+          "server_prefill_tok_s": null,
+          "prompt_tokens": 308,
+          "tokens": 621,
+          "usage": {
+            "prompt_tokens": 308,
+            "total_tokens": 929,
+            "completion_tokens": 621,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 134
+          },
+          "timings": {},
+          "response_model_ids": [
+            "qwen3.8-27b-spark-nvfp4"
+          ],
+          "finish_reason": "stop"
+        },
+        {
+          "started_at": "2026-10-08T18:06:02.262904Z",
+          "elapsed_ms": 97446.06987503357,
+          "ttft_ms": 195.83604205399752,
+          "decode_tok_s": 17.72767240151018,
+          "decode_method": "client_post_first_token_estimate",
+          "client_decode_ms": 97249.08949993551,
+          "client_decode_tok_s": 17.72767240151018,
+          "server_decode_tok_s": null,
+          "server_prefill_tok_s": null,
+          "prompt_tokens": 308,
+          "tokens": 1725,
+          "usage": {
+            "prompt_tokens": 308,
+            "total_tokens": 2033,
+            "completion_tokens": 1725,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 74
+          },
+          "timings": {},
+          "response_model_ids": [
+            "qwen3.8-27b-spark-nvfp4"
+          ],
+          "finish_reason": "stop"
+        },
+        {
+          "started_at": "2026-10-08T18:07:39.710191Z",
+          "elapsed_ms": 30630.33587508835,
+          "ttft_ms": 187.44637514464557,
+          "decode_tok_s": 16.227596953150915,
+          "decode_method": "client_post_first_token_estimate",
+          "client_decode_ms": 30441.96879095398,
+          "client_decode_tok_s": 16.227596953150915,
+          "server_decode_tok_s": null,
+          "server_prefill_tok_s": null,
+          "prompt_tokens": 308,
+          "tokens": 495,
+          "usage": {
+            "prompt_tokens": 308,
+            "total_tokens": 803,
+            "completion_tokens": 495,
+            "prompt_tokens_details": null,
+            "reasoning_tokens": 183
+          },
+          "timings": {},
+          "response_model_ids": [
+            "qwen3.8-27b-spark-nvfp4"
+          ],
+          "finish_reason": "stop"
+        }
+      ],
+      "note": "Unmodified pinned legacy default prompt ×32; 308 prompt tokens; (server completion_tokens−1)/(last−first nonempty chunk). Three natural stops; no output cap."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark-qwen38-sglang",
+      "model": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+      "host": "Spark",
+      "runtime": "sglang 0.0.0.dev1+g708f51e44.d20260909; torch 2.15.0.dev20260818+cu134; transformers 5.12.1; tokenizers 0.22.2; flashinfer-python 0.6.18",
+      "route": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway",
+      "id": "spark-qwen38-six-gates",
+      "label": "Spark Qwen3.8: six registry-style checks at 128K target",
+      "status": "Passed with context caveat",
+      "test_target_tokens": 131072,
+      "configured_context_tokens": 204800,
+      "evidence": {
+        "ok": {
+          "load": true,
+          "chat": true,
+          "reasoning": true,
+          "tools": true,
+          "context": true,
+          "speed": true
+        },
+        "chat": {
+          "content": "\n\nRed, blue, yellow",
+          "finish": "stop"
+        },
+        "reasoning": {
+          "thinking_chars": 101,
+          "content": "\n\n391"
+        },
+        "tools": {
+          "call": [
+            {
+              "id": "call_17bb92b25e3f4581aa1a4d97",
+              "index": 0,
+              "type": "function",
+              "function": {
+                "name": "get_weather",
+                "arguments": "{\"city\": \"Paris\"}"
+              }
+            }
+          ],
+          "reply": "\n\nIt's currently **17°C (63°F)** in Paris, with **overcast** skies. 🌥️",
+          "finish": "stop",
+          "calls_again": 0,
+          "thinking_chars": 181
+        },
+        "context": {
+          "prompt_tokens": 106294,
+          "seconds": 106.4,
+          "content": "\n\n58213"
+        },
+        "speed": {
+          "window_s": 30,
+          "tokens_total": 16932,
+          "seconds_total": 746.9
+        }
+      },
+      "speed_sample": {
+        "rate_tps": 15.829876045870224,
+        "ttft_s": 0.19213850004598498,
+        "sample_tokens": 477,
+        "sample_interval_s": 30.132802166044712,
+        "sample_chars": 1834,
+        "sample_chars_div4_tokens": 458,
+        "sample_chars_div4_tps": 15.199382967313257,
+        "tokens_total": 16932,
+        "duration_s": 746.8508854999673,
+        "finish_reason": "stop",
+        "done": true,
+        "last_minus_first_s": 746.6193630408961,
+        "usage": {},
+        "request": {
+          "model": "qwen3.8-27b-spark-nvfp4",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Write a detailed 600-word story about a lighthouse keeper."
+            }
+          ],
+          "temperature": 0.8,
+          "stream": true
+        }
+      },
+      "context_request_seconds": 106.36433354206383,
+      "note": "Load/chat/reasoning/tools/context/speed passed. Actual context input: 106,294 tokens; retrieved 58213. Separate speed-gate sample 15.83 tok/s; excluded from matched three-run median. No agent-workflow or concurrency claim."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark-qwen38-sglang",
+      "model": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+      "host": "Spark",
+      "runtime": "sglang 0.0.0.dev1+g708f51e44.d20260909; torch 2.15.0.dev20260818+cu134; transformers 5.12.1; tokenizers 0.22.2; flashinfer-python 0.6.18",
+      "route": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway",
+      "id": "spark-qwen38-restoration",
+      "label": "Spark Qwen3.8: restore original Qwen3.6 service",
+      "status": "Passed",
+      "restoration": {
+        "same_original_image_restored": true,
+        "final_service_states": {
+          "spark-vllm.service": "active",
+          "nvpair.service": "active"
+        },
+        "pair_same_main_pid": 41956,
+        "pair_same_active_since": "2026-10-06 23:45:47 CEST",
+        "temporary_container_absent": true,
+        "temporary_port_18888_absent_from_ss": true,
+        "tunnel_stopped": true,
+        "remote_scratch_removed": true,
+        "temporary_image_removed": true,
+        "secret_copies_created": false
+      },
+      "authenticated_original_response": "SPARK_RESTORED",
+      "finish_reason": "stop",
+      "note": "Original Qwen3.6 vLLM is active and enabled. PAIR remained running unchanged. Immediate --rm cleanup observation was transient; final explicit inspect confirmed the temporary container absent."
     }
   ],
   "validation_coverage": [
@@ -1248,6 +1563,14 @@
     {
       "label": "Exact older Qwen3.8 recipe and depth-sweep evidence",
       "url": "https://raw.githubusercontent.com/sybil-solutions/local-ai-registry/56621dc923c23da134d995e8359a7e0215c6b9a6/data/registry/recipe/qwen38-27b-exl3-3bpw-rtx4090-sglang-tp1.json"
+    },
+    {
+      "label": "Spark Qwen3.8 ARM64 serving recipe, pinned source",
+      "url": "https://github.com/MiaAI-Lab/Qwen3.8-27B-SGLang-DGX-Spark/tree/9fb18edf8cfb3364e8aa89258e6d5ab1fe1fd11a"
+    },
+    {
+      "label": "Spark Qwen3.8 mixed-precision checkpoint, pinned revision",
+      "url": "https://huggingface.co/RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead/tree/009632fef96dd349150baa780c984e62e70e91fe"
     }
   ],
   "configurations": [
@@ -1355,6 +1678,22 @@
       "state": "Historical; functional with CPU spill",
       "route": "Hermes → j9 PAIR endpoint → Ollama",
       "historical": true
+    },
+    {
+      "id": "spark-qwen38-sglang",
+      "label": "Spark · Qwen3.8 27B · NVFP4/FP8 mixed",
+      "model": "Qwen3.8 27B",
+      "model_id": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+      "host": "Spark",
+      "runtime": "ARM64 SGLang",
+      "weights": "ModelOpt mixed precision: NVFP4 MLP, FP8 attention projections, BF16 lm_head; MTP ignored by quantizer",
+      "kv_cache": "FP8 e4m3",
+      "context_tokens": 204800,
+      "speculative_decoding": "EAGLE/MTP · 3 steps · 4 draft tokens",
+      "state": "Benchmark completed; Qwen3.6 restored",
+      "route": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway",
+      "historical": false,
+      "note": "Same Qwen3.8-27B family but different quantized checkpoint and ARM64-specific SGLang runtime from j9 EXL3; not a hardware-only speed comparison. MTP 3 steps/topk1/4 draft tokens and FP8 KV retained. Remote timing uses SSH direct transport, not the j9 gateway. All six gates passed at 106,294 actual input tokens; full configured context not tested."
     }
   ],
   "pair_verification": {
@@ -1969,6 +2308,80 @@
         }
       },
       {
+        "id": "spark-qwen38-sglang",
+        "origin": "local",
+        "model": "Qwen3.8 27B",
+        "setup": "NVFP4/FP8 mixed · BF16 head · ARM64 SGLang · MTP draft4",
+        "hardware": "DGX Spark · GB10",
+        "source": "This lab · 2026-10-08",
+        "evidence_class": "Measured locally; temporary deployment",
+        "decode": {
+          "value": 17.49,
+          "note": "Exact tokenizer; first30s; median of3;13.96–17.90. Chars/4 median15.27."
+        },
+        "input_rate": {
+          "value": 999.34,
+          "note": "106,294 input tokens / entire106.3643s request; not pure prefill."
+        },
+        "context": {
+          "value": 204800,
+          "note": "Configured204,800; tested106,294 input at128K target."
+        },
+        "checks": {
+          "value": "6/6 at128K",
+          "note": "Separate speed gate15.83; one matched replicate below15."
+        },
+        "agent": {
+          "value": null,
+          "note": "Not tested."
+        },
+        "aggregate": {
+          "value": null,
+          "note": "Concurrency1 only."
+        },
+        "route": {
+          "label": "Bypasses PAIR and Aperture",
+          "detail": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway. Original Qwen3.6 restored."
+        }
+      },
+      {
+        "id": "spark-qwen38-legacy",
+        "origin": "local",
+        "model": "Qwen3.8 27B · legacy-method replay",
+        "setup": "NVFP4/FP8 mixed · BF16 head · ARM64 SGLang · MTP draft4",
+        "hardware": "DGX Spark · GB10",
+        "source": "This lab · 2026-10-08",
+        "evidence_class": "Measured locally; temporary deployment",
+        "decode": {
+          "value": 16.84,
+          "note": "Median of3;16.23–17.73; server tokens minus1 / complete decode span."
+        },
+        "input_rate": {
+          "value": null,
+          "note": ""
+        },
+        "context": {
+          "value": 204800,
+          "note": "Configured204,800; tested106,294 input at128K target."
+        },
+        "checks": {
+          "value": "3/3 natural stops",
+          "note": "308-token default prompt each."
+        },
+        "agent": {
+          "value": null,
+          "note": "Not tested."
+        },
+        "aggregate": {
+          "value": null,
+          "note": "Concurrency1 only."
+        },
+        "route": {
+          "label": "Bypasses PAIR and Aperture",
+          "detail": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway. Original Qwen3.6 restored."
+        }
+      },
+      {
         "id": "j9-q8-final",
         "origin": "local",
         "model": "Qwen3.6 27B",
@@ -2420,10 +2833,11 @@
       }
     ],
     "notes": [
-      "Closest same-recipe reference: our Qwen3.8 legacy-default recreation measured 144.09 tok/s median versus 0xSero’s 135.4. Image and weight pins match; the external raw request override is not published, so this is an approximate comparison, not an exact-prompt reproduction.",
-      "Counting changes the apparent score: our Qwen3.8 lighthouse median is 183.22 tok/s with its real tokenizer, but 138.87 using characters/4. The registry can fall back to characters/4 and does not preserve the counting method in its recipe summaries. Do not claim a speedup from 183.22 versus 146.0.",
+      "Spark Qwen3.8 measured 17.49 tok/s versus j9’s 183.22 using the same lighthouse counting/timing method, but not the same quantization, serving build or transport. j9’s EXL3 image is AMD64-only; Spark used ARM64 SGLang with RadixArk mixed NVFP4/FP8 weights and BF16 head. This is not a hardware-only comparison.",
+      "Closest same-recipe reference: our j9 Qwen3.8 legacy-default recreation measured 144.09 tok/s median versus 0xSero’s 135.4. Image and weight pins match; the external raw request override is not published, so this is an approximate comparison, not an exact-prompt reproduction.",
+      "Counting changes the apparent score: our j9 Qwen3.8 lighthouse median is 183.22 tok/s with its real tokenizer, but 138.87 using characters/4. The registry can fall back to characters/4 and does not preserve the counting method in its recipe summaries. Do not claim a speedup from 183.22 versus 146.0.",
       "The current 0xSero 146.0/142.2 recipes use newer SC EXL3 weights, a different image, different KV pools and 256K/160K contexts. Our installed 3.00 bpw/head6 recipe is the older 200K variant. Source dates and classifications remain visible.",
-      "Our Qwen3.8 passed all six checks at a 128K test target, using 106294 input tokens. Its configured 200K test was rejected: 166667 input tokens exceeded the actual 139838-token limit. No automatic truncation or hidden context reduction was used.",
+      "Our j9 Qwen3.8 passed all six checks at a 128K test target, using 106294 input tokens. Its configured 200K test was rejected: 166667 input tokens exceeded the actual 139838-token limit. No automatic truncation or hidden context reduction was used.",
       "Input rates here are context-prompt tokens divided by whole request time unless explicitly labelled otherwise. They include output/network overhead; input lengths and cache states differ. They are not interchangeable with native prefill counters.",
       "Qwen3.6 27B, Qwen3.8 27B and Qwen3.6 35B-A3B are different models; quantization, MTP, context and runtime also differ. Throughput is not a model-quality score. Agent times involve different tool trajectories and are not controlled speedups.",
       "Spark 95.1 tok/s and 317.0 aggregate are MiaAI-Lab’s published results, not personal 0xSero measurements. LocalMaxxing 46.64/101 are archived observations with unidentified submitters, not current registry acceptance.",
@@ -2437,7 +2851,7 @@
     },
     {
       "title": "Where the benchmark clients ran",
-      "detail": "Qwen3.8 throughput was measured from a remote harness through private HTTPS and the Local AI gateway into SGLang on j9, bypassing PAIR and Aperture. Spark NVFP4 used local vLLM API probes; its Hermes workflow ran from Radon through encrypted SSH. Some supplemental j9 native-API tests retained no proxy-path evidence; those remain unknown."
+      "detail": "j9 Qwen3.8 used a remote harness → private HTTPS → Local AI gateway → SGLang, bypassing PAIR and Aperture. Spark Qwen3.8 used a Mac Python harness → encrypted SSH → loopback-only SGLang, without an application gateway. Spark Qwen3.6 NVFP4 used local vLLM probes; its Hermes workflow ran from Radon through SSH. Some supplemental j9 API checks retain no proxy-path evidence."
     },
     {
       "title": "Aperture checks were functional, not speed tests",
@@ -2533,15 +2947,115 @@
       {
         "machine": "DGX Spark · GB10",
         "model": "Qwen3.8 27B",
-        "runtime": "Recipe selection in progress",
-        "route": "Not yet measured",
-        "workload": "Requested benchmark in progress",
-        "decode": "Not yet tested",
+        "runtime": "ARM64 SGLang · NVFP4/FP8 mixed · BF16 head",
+        "route": "SSH → SGLang; no PAIR",
         "aggregate": "—",
-        "source_run_id": null
+        "workload": "1 stream · first 30 s · median of 3",
+        "decode": "17.49 (13.96–17.90)",
+        "source_run_id": "spark-qwen38-lighthouse"
+      },
+      {
+        "machine": "DGX Spark · GB10",
+        "model": "Qwen3.8 27B",
+        "runtime": "ARM64 SGLang · NVFP4/FP8 mixed · BF16 head",
+        "route": "SSH → SGLang; no PAIR",
+        "aggregate": "—",
+        "workload": "1 stream · legacy method · median of 3",
+        "decode": "16.84 (16.23–17.73)",
+        "source_run_id": "spark-qwen38-legacy"
+      },
+      {
+        "machine": "DGX Spark · GB10",
+        "model": "Qwen3.8 27B",
+        "runtime": "ARM64 SGLang · NVFP4/FP8 mixed · BF16 head",
+        "route": "SSH → SGLang; no PAIR",
+        "aggregate": "—",
+        "workload": "1 stream · separate functional speed gate",
+        "decode": "15.83",
+        "source_run_id": "spark-qwen38-six-gates"
       }
     ],
-    "note": "Output tok/s only. Ranges show observed per-stream/sample minima and maxima; Qwen3.8 completed runs show median (range). The same j9 lighthouse streams give 138.87 tok/s using characters÷4, an estimate—not a separate benchmark. Earlier j9 fit/rejected configurations have no recorded output-speed measurement. Input/context rates and external publisher scores are in the detailed comparison. No controlled PAIR-versus-direct overhead test was performed."
+    "note": "Output tok/s only. Ranges show observed per-stream/sample minima and maxima; Qwen3.8 completed runs show median (range). The same j9 lighthouse streams give 138.87 tok/s using characters÷4, an estimate—not a separate benchmark. Earlier j9 fit/rejected configurations have no recorded output-speed measurement. Input/context rates and external publisher scores are in the detailed comparison. No controlled PAIR-versus-direct overhead test was performed. Spark Qwen3.8 uses a different quantized checkpoint and ARM64 runtime from j9; these are deployment comparisons, not hardware-only speedups. Its chars÷4 median is 15.27; one measured replicate fell below 15 tok/s. Spark Qwen3.6 was restored after the test."
+  },
+  "spark_qwen38_deployment": {
+    "model": {
+      "repository": "RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead",
+      "revision": "009632fef96dd349150baa780c984e62e70e91fe",
+      "quantization": "ModelOpt mixed precision: NVFP4 MLP, FP8 attention projections, BF16 lm_head; MTP ignored by quantizer"
+    },
+    "image": "lmsysorg/sglang@sha256:00205b89f74691f76a0ffbd6846376d9323971930a5d59bf63a65dadc7d67927",
+    "runtime": "sglang 0.0.0.dev1+g708f51e44.d20260909; torch 2.15.0.dev20260818+cu134; transformers 5.12.1; tokenizers 0.22.2; flashinfer-python 0.6.18",
+    "platform": {
+      "architecture": "aarch64",
+      "gpu": "NVIDIA GB10",
+      "compute_capability": "12.1 (SM121)",
+      "driver": "580.178.04"
+    },
+    "settings": {
+      "context_length": 204800,
+      "mem_fraction_static": 0.65,
+      "kv_cache_dtype": "fp8_e4m3",
+      "mamba_ssm_dtype": "bfloat16",
+      "speculative_algorithm": "EAGLE",
+      "speculative_num_steps": 3,
+      "speculative_num_draft_tokens": 4,
+      "speculative_eagle_topk": 1,
+      "max_running_requests": 1,
+      "max_mamba_cache_size": 4,
+      "max_total_tokens": null,
+      "sampling_defaults": "model",
+      "chunked_prefill_size": 8192,
+      "attention_backend": "flashinfer",
+      "quantization": null
+    },
+    "allocation": {
+      "target_weights_gib": 24.91,
+      "mtp_weights_gib": 6.03,
+      "kv_pool_tokens": 1393772,
+      "target_k_gib": 21.27,
+      "target_v_gib": 21.27,
+      "mtp_k_gib": 1.33,
+      "mtp_v_gib": 1.33,
+      "available_gpu_mem_gib_after_startup": 41.31,
+      "actual_quantization": "modelopt_mixed/MIXED_PRECISION"
+    },
+    "method_sources": {
+      "lab_sha256": "af7643cec4cd50bcb831fb7a5b523067de175cffd51366fce248a194797ba2b3",
+      "legacy_sha256": "6924fde0678880072df11f7a5fdea35967b057474f380b59009b857772c4586d",
+      "instrumentation_sha256": "058c4d4a96bcae6ec9799c825e3d93e5257eba941e48671e8a5b09d5fc4f7177"
+    },
+    "method_notes": [
+      "Unmodified pinned lab.stream_rate and gates functions execute; lab.count replaced with exact checkpoint tokenizer locally (add_special_tokens=False), no chars/4 fallback. urllib response instrumentation captures SSE timing/finish reasons without changing request bodies.",
+      "Lighthouse no max_tokens, temperature 0.8, reasoning plus content, first >=30s sample after first nonempty piece; each stream allowed to natural stop. chars/4 only emitted as explicitly labeled secondary caveat.",
+      "Legacy executes the unmodified pinned measure function using its default prompt and defaults (no unpublished request overrides). include_usage=true; (server completion_tokens-1)/(last-first nonempty chunk).",
+      "Legacy model sampling defaults follow pinned checkpoint generation_config (temperature 1.0, top_p .95, top_k20); lighthouse overrides temperature to .8; functional chat overrides to .6.",
+      "Functional lab.gates target ctx=131072 while runtime max_model_len=204800, matching j9 tested target rather than claiming full configured context proven. One additional lighthouse stream from functional speed gate is separate from matched 3-sample throughput set.",
+      "No proxy application gateway: direct SSH transport to loopback-only Docker endpoint, Python client on Mac. Any comparison with gateway-backed j9 timing has a transport difference."
+    ],
+    "candidate_incompatibilities": [
+      {
+        "image": "ghcr.io/0xsero/sglang-exl3@sha256:84f75f3424c99a3d63392a4e0348292bdeba9cf7efba2ff1aa9b85c8fc0131e8",
+        "tested": "docker pull --platform linux/arm64",
+        "exit_code": 1,
+        "error": "no matching manifest for linux/arm64 in the manifest list entries: no match for platform in manifest: not found",
+        "manifest_platforms": [
+          "linux/amd64",
+          "unknown/unknown"
+        ]
+      },
+      {
+        "image": "ghcr.io/0xsero/sglang-exl3:v0.7.0-multiarch@sha256:9d95829ab41a9307e9b25c86e4af1ec52c6a02f7888f0e13a1ce93c0a7ff3814",
+        "tested": "docker manifest inspect --verbose",
+        "manifest_platform": "linux/amd64",
+        "note": "multiarch refers to GPU SM86/89/120, not CPU architecture."
+      },
+      {
+        "source": "https://github.com/MiaAI-Lab/Qwen3.8-27B-DFlash2-EXL3-5.0bpw/blob/1242187390f780dba907e30659f1639fd0b491c8/tools/serve_openai.py",
+        "reason": "Rejected unchanged EXL3 server for benchmark: request default max_tokens=1024 (lines 382-383), streaming discards generated token usage (477-478) and never emits usage. Could not provide uncapped natural-stop plus legacy stream usage unchanged. Not tested as deployment and not claimed unsupported weights."
+      }
+    ],
+    "state": "Temporary benchmark deployment removed; original Qwen3.6 restored",
+    "raw_evidence_sha256": "989b3e7a503cb02d9862a3efe40bffaacfdab3a5dba81a170b9d23c61608c7b6"
   }
 }</script>
 <script>
@@ -2583,9 +3097,11 @@ byId('configuration-filter').addEventListener('change',renderRuns);renderRuns();
 identity(byId('j9-config'),config('j9-q8-final'));fields(byId('j9-config'),data.current_model);
 identity(byId('spark-config'),config('spark-nvfp4-vllm'));const dep=data.spark_deployment;fields(byId('spark-config'),dep,['model_revision','recipe_revision','image_digest','image_repository']);const pins=el('details');pins.append(el('summary','Immutable model and container pins'));fields(pins,Object.fromEntries(['model_revision','recipe_revision','image_digest','image_repository'].map(k=>[k,dep[k]])));byId('spark-config').append(pins);
 const qwenConfig=byId('qwen38-config');identity(qwenConfig,config('j9-qwen38-sglang'));qwenConfig.append(badge('Measured with context caveat'),el('p',config('j9-qwen38-sglang').note));const qwenPins=el('details');qwenPins.append(el('summary','Qwen3.8 model, image, runtime and context limits'));fields(qwenPins,data.qwen38_deployment);qwenConfig.append(qwenPins);
+const spark38Config=el('div',null,'card');spark38Config.style.gridColumn='1/-1';identity(spark38Config,config('spark-qwen38-sglang'));spark38Config.append(badge('Benchmark complete; Qwen3.6 restored'),el('p',config('spark-qwen38-sglang').note));const spark38Pins=el('details');spark38Pins.append(el('summary','Spark Qwen3.8 model, image, runtime and measurement pins'));fields(spark38Pins,data.spark_qwen38_deployment);spark38Config.append(spark38Pins);qwenConfig.after(spark38Config);
 byId('verification-target').textContent='Target: '+config('spark-nvfp4-vllm').model_id+' · Spark · direct vLLM, not PAIR.';
 data.planned_tests.forEach(t=>{const card=el('article',null,'card');card.append(el('h3',t.name));identity(card,config(t.configuration_id));card.append(badge(t.status),el('p',t.purpose,'note'));byId('test-plan').append(card);});
 const qwenValidation=byId('qwen38-validation'),qwenEvidence=run('qwen38-registry-128k');qwenValidation.append(el('h3','Qwen3.8 · six registry-style checks'));identity(qwenValidation,config('j9-qwen38-sglang'));qwenValidation.append(badge('Passed at 128K target; context caveat'));fields(qwenValidation,qwenEvidence.evidence.ok);qwenValidation.append(el('p',config('j9-qwen38-sglang').note,'note'));
+const spark38Validation=el('div',null,'card');spark38Validation.style.marginTop='20px';spark38Validation.append(el('h3','Spark Qwen3.8 · six registry-style checks'));identity(spark38Validation,config('spark-qwen38-sglang'));spark38Validation.append(badge('6/6 passed at 128K target'));fields(spark38Validation,run('spark-qwen38-six-gates').evidence.ok);spark38Validation.append(el('p','106,294 input tokens tested; configured 204,800 context not fully tested. Separate speed gate: 15.83 tok/s. One matched throughput replicate was below the 15 tok/s floor. Original Qwen3.6 restored; PAIR remained running.','note'));qwenValidation.after(spark38Validation);
 byId('coverage-models').textContent='Hermes workflows: '+config('j9-q8-final').model_id+' on j9 via PAIR; '+config('spark-nvfp4-vllm').model_id+' on Spark via direct vLLM.';
 data.validation_coverage.forEach(x=>byId('coverage').append(el('li',typeof x==='string'?x:JSON.stringify(x))));
 data.hardware.forEach(h=>{const card=el('article',null,'card');card.append(el('h3',h.name));fields(card,h,['name']);byId('hardware-cards').append(card);});
