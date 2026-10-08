@@ -24,8 +24,16 @@
 <div class="wrap">
 <div class="topline label"><a href="https://www.joostvanderlaan.nl/">Joost van der Laan</a><a href="https://www.joostvanderlaan.nl/html-effectiveness/">HTML Effectiveness / field report</a></div>
 <header class="hero"><p class="eyebrow">Local inference · measured, not assumed</p><h1 id="report-title">Local inference lab</h1><p class="intro">Qwen3.6 and Qwen3.8 on j9 and Spark. Each result names its model, runtime and measurement method. Local measurements sit beside—not in place of—published reference scores.</p><div class="hero-footer"><div><p id="report-status"></p><time id="updated" class="updated"></time></div><button id="download" class="button" disabled>Download public data</button></div></header>
-<nav class="nav" aria-label="Report sections"><a href="#models">01 Models</a><a href="#routes">Benchmark routes</a><a href="#comparison">Compare scores</a><a href="#results">02 Results</a><a href="#pair">03 PAIR</a><a href="#experiments">04 Experiments</a><a href="#configuration">05 Configuration</a><a href="#validation">06 Verification</a><a href="#hardware">07 Machines</a><a href="#sources">08 Sources</a></nav>
+<nav class="nav" aria-label="Report sections"><a href="#throughput">Tok/s summary</a><a href="#models">01 Models</a><a href="#routes">Benchmark routes</a><a href="#comparison">Compare scores</a><a href="#results">02 Results</a><a href="#pair">03 PAIR</a><a href="#experiments">04 Experiments</a><a href="#configuration">05 Configuration</a><a href="#validation">06 Verification</a><a href="#hardware">07 Machines</a><a href="#sources">08 Sources</a></nav>
 <main id="main"><noscript>This report needs JavaScript to render its embedded data. The HTML contains the full public JSON record; no network request is needed to render it.</noscript><div id="render-error" class="error hidden" role="alert"></div>
+<section id="throughput">
+<div class="section-head"><div><span class="section-index">Quick reference / Our measurements</span><h2>Tokens per second, by tested combination.</h2><p>Our output-speed results only. Different workloads are separate rows; missing measurements are not zero. Published reference scores remain in the detailed comparison below.</p></div></div>
+<div class="table-shell" tabindex="0" role="region" aria-label="Simple throughput summary; scroll horizontally on small screens">
+<table><caption>Decode is per stream. Aggregate is total output across clients, including prefill and queueing—not the sum of decode rates.</caption>
+<thead><tr><th scope="col">Machine</th><th scope="col">Model / runtime</th><th scope="col">Route</th><th scope="col">Workload</th><th scope="col">Decode tok/s</th><th scope="col">Aggregate tok/s</th></tr></thead>
+<tbody id="throughput-rows"></tbody></table></div>
+<p id="throughput-note" class="note"></p>
+</section>
 <section id="models"><div class="section-head"><div><span class="section-index">01 / Know the setup</span><h2>The model is part of the result.</h2><p>27B and 35B-A3B are different models. GGUF and NVFP4 are different weight formats. PAIR is a router, not a model; Hermes and Codex are clients.</p></div></div><div id="model-map" class="grid model-map"></div><details><summary>Earlier j9 tuning configurations—kept separate from the selected model settings</summary><div id="historical-models" class="grid"></div></details></section>
 <section id="routes"><div class="section-head"><div><span class="section-index">Method / Request paths</span><h2>Both PAIR and direct endpoints—not a route A/B test.</h2><p>Host, client location, request route and lifecycle owner are separate facts. “Bypasses PAIR” does not mean the benchmark client ran on the GPU machine, or that no gateway was involved.</p></div></div><div id="route-overview" class="grid two"></div></section>
 <section id="comparison">
@@ -46,8 +54,8 @@
 </div>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-08T12:18:24.088965+00:00",
-  "status": "Benchmark routes clarified; measured scores unchanged; lifecycle caveat recorded",
+  "updated_at": "2026-10-08T17:31:27.258323+00:00",
+  "status": "Simple throughput table added; Spark Qwen3.8 benchmark in progress",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -2439,7 +2447,102 @@
       "title": "Inference success ≠ lifecycle verification",
       "detail": "Later inspection on 2026-10-08 found plugin-owned Qwen3.8 containers running while Local AI 6.0.1 retained a stopping entry dated 2026-09-27. A real plugin snapshot reported stopped unexpectedly. The earlier scores remain recorded inference measurements; plugin stop/start, UI-state recovery and endpoint continuity were not validated. This is a dated observation, not live status."
     }
-  ]
+  ],
+  "throughput_summary": {
+    "rows": [
+      {
+        "machine": "j9 · RTX 4090",
+        "model": "Qwen3.6 27B",
+        "runtime": "Ollama · Q4_K_M · Q8 KV",
+        "route": "Via PAIR",
+        "workload": "1 stream · 256 output tokens",
+        "decode": "48.97",
+        "aggregate": "—",
+        "source_run_id": "j9-final-decode"
+      },
+      {
+        "machine": "j9 · RTX 4090",
+        "model": "Qwen3.8 27B",
+        "runtime": "SGLang · EXL3 3.00 bpw",
+        "route": "Gateway → SGLang; no PAIR",
+        "workload": "1 stream · first 30 s · median of 3",
+        "decode": "183.22 (179.02–183.26)",
+        "aggregate": "—",
+        "source_run_id": "qwen38-lighthouse-streams"
+      },
+      {
+        "machine": "j9 · RTX 4090",
+        "model": "Qwen3.8 27B",
+        "runtime": "SGLang · EXL3 3.00 bpw",
+        "route": "Gateway → SGLang; no PAIR",
+        "workload": "1 stream · legacy method · median of 3",
+        "decode": "144.09 (133.28–151.66)",
+        "aggregate": "—",
+        "source_run_id": "qwen38-legacy-default"
+      },
+      {
+        "machine": "j9 · RTX 4090",
+        "model": "Qwen3.8 27B",
+        "runtime": "SGLang · EXL3 3.00 bpw",
+        "route": "Gateway → SGLang; no PAIR",
+        "workload": "Incomplete legacy attempt · 2 valid samples; third incomplete",
+        "decode": "131.67–140.37",
+        "aggregate": "—",
+        "source_run_id": "qwen38-legacy-first-attempt"
+      },
+      {
+        "machine": "DGX Spark · GB10",
+        "model": "Qwen3.6 35B-A3B",
+        "runtime": "vLLM · NVFP4",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "1 stream · 256 tokens each",
+        "decode": "100.68",
+        "aggregate": "95.43",
+        "source_run_id": "spark-concurrency-1"
+      },
+      {
+        "machine": "DGX Spark · GB10",
+        "model": "Qwen3.6 35B-A3B",
+        "runtime": "vLLM · NVFP4",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "4 clients · 256 tokens each",
+        "decode": "60.42–65.73",
+        "aggregate": "163.42",
+        "source_run_id": "spark-concurrency-4"
+      },
+      {
+        "machine": "DGX Spark · GB10",
+        "model": "Qwen3.6 35B-A3B",
+        "runtime": "vLLM · NVFP4",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "8 clients · 256 tokens each · 4 active slots",
+        "decode": "55.97–65.81",
+        "aggregate": "228.19",
+        "source_run_id": "spark-concurrency-8"
+      },
+      {
+        "machine": "DGX Spark baseline",
+        "model": "Qwen3.6 35B-A3B",
+        "runtime": "Ollama · Q4_K_M GGUF",
+        "route": "Via PAIR; node trace missing",
+        "workload": "Agent test only; routing errors",
+        "decode": "Not measured",
+        "aggregate": "—",
+        "source_run_id": "spark-gguf-baseline"
+      },
+      {
+        "machine": "DGX Spark · GB10",
+        "model": "Qwen3.8 27B",
+        "runtime": "Recipe selection in progress",
+        "route": "Not yet measured",
+        "workload": "Requested benchmark in progress",
+        "decode": "Not yet tested",
+        "aggregate": "—",
+        "source_run_id": null
+      }
+    ],
+    "note": "Output tok/s only. Ranges show observed per-stream/sample minima and maxima; Qwen3.8 completed runs show median (range). The same j9 lighthouse streams give 138.87 tok/s using characters÷4, an estimate—not a separate benchmark. Earlier j9 fit/rejected configurations have no recorded output-speed measurement. Input/context rates and external publisher scores are in the detailed comparison. No controlled PAIR-versus-direct overhead test was performed."
+  }
 }</script>
 <script>
 (function(){
@@ -2462,6 +2565,7 @@ const config=id=>{const c=configs.get(id);if(!c)throw new Error('Missing configu
 byId('report-title').textContent=data.title;byId('report-status').textContent=data.status;byId('updated').dateTime=data.updated_at;byId('updated').textContent='Snapshot · '+new Date(data.updated_at).toISOString().replace('T',' ').replace(/\.\d+Z$/,' UTC');byId('privacy').textContent=data.privacy;
 data.configurations.forEach(c=>{const card=el('article',null,'card');card.append(el('p',c.host+' / '+c.runtime,'label'),el('h3',c.model));identity(card,c);card.append(badge(c.state));const d={weights:c.weights};for(const k of ['kv_cache','context_tokens','speculative_decoding'])if(k in c)d[k]=c[k];fields(card,d);if(c.note)card.append(el('p',c.note,'note'));byId(c.historical?'historical-models':'model-map').append(card);const option=el('option',c.label);option.value=c.id;byId('configuration-filter').append(option);});
 data.route_evidence.forEach(item=>{const card=el('article',null,'card');card.append(el('h3',item.title),el('p',item.detail));byId('route-overview').append(card);});
+data.throughput_summary.rows.forEach(r=>{const tr=el('tr'),machine=el('th',r.machine);machine.scope='row';tr.append(machine);const model=el('td');model.append(el('strong',r.model),el('p',r.runtime,'note'));tr.append(model);for(const key of ['route','workload','decode','aggregate'])tr.append(el('td',r[key]));byId('throughput-rows').append(tr);});byId('throughput-note').textContent=data.throughput_summary.note;
 const selections=[['j9-q8-final','j9-final-decode','j9-final-hermes'],['spark-gguf-pair',null,'spark-gguf-baseline'],['spark-nvfp4-vllm','spark-concurrency-1','spark-hermes']];
 for(const [id,decodeId,workflowId] of selections){const c=config(id),card=el('article',null,'card');identity(card,c);const metrics=el('div',null,'metrics');if(decodeId){const r=run(decodeId);metric(metrics,r.generation_tokens_per_second??r.samples[0].generation_tokens_per_second,'tokens/s','Bounded decode');}else metric(metrics,8,'of 8 tests','Behavior checks');const w=run(workflowId);metric(metrics,w.hermes_seconds??w.agent_seconds,'seconds',id==='spark-gguf-pair'?'Codex workflow':'Hermes workflow');card.append(metrics,badge(w.status));card.append(el('p',id==='spark-gguf-pair'?'GGUF via PAIR. Task passed with Responses routing errors; this is not the NVFP4 result.':w.tool_calls+' tool calls; original and unseen inputs checked. '+(id==='j9-q8-final'?'Hermes and decode routed through PAIR.':'Hermes used encrypted SSH to vLLM; PAIR bypassed.'),'note'));byId('result-cards').append(card);}
 const concurrency=byId('concurrency');concurrency.append(el('h3','Spark NVFP4 · aggregate streaming output'));identity(concurrency,config('spark-nvfp4-vllm'));const samples=[1,4,8].map(n=>run('spark-concurrency-'+n)),max=Math.max(...samples.map(r=>r.aggregate_tokens_per_second));samples.forEach(r=>{const row=el('div',null,'bar-row'),track=el('div',null,'bar-track'),bar=el('div',null,'bar');bar.style.width=(r.aggregate_tokens_per_second/max*100)+'%';track.append(bar);row.append(el('span',r.clients+' clients'),track,el('span',number(r.aggregate_tokens_per_second)));concurrency.append(row);});concurrency.append(el('p','Tokens/s aggregate, including prefill and queueing. Each client generated 256 tokens. Eight clients shared four active slots. The single-client aggregate differs from decode-only speed above.','note'));
