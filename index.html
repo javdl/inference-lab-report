@@ -23,7 +23,7 @@
 <a class="skip" href="#main">Skip to report</a>
 <div class="wrap">
 <div class="topline label"><a href="https://www.joostvanderlaan.nl/">Joost van der Laan</a><a href="https://www.joostvanderlaan.nl/html-effectiveness/">HTML Effectiveness / field report</a></div>
-<header class="hero"><p class="eyebrow">Local inference · measured, not assumed</p><h1 id="report-title">Local inference lab</h1><p class="intro">Qwen3.6 and Qwen3.8 on j9 and Spark. Each result names its model, runtime and measurement method. Local measurements sit beside—not in place of—published reference scores.</p><div class="hero-footer"><div><p id="report-status"></p><time id="updated" class="updated"></time></div><button id="download" class="button" disabled>Download public data</button></div></header>
+<header class="hero"><p class="eyebrow">Local inference · measured, not assumed</p><h1 id="report-title">Local inference lab</h1><p class="intro">Qwen3.6, Qwen3.8 and Nemotron 3.5 Super VL on j9, Spark and spark2. Each result names its model, runtime and measurement method. Local measurements sit beside—not in place of—published reference scores.</p><div class="hero-footer"><div><p id="report-status"></p><time id="updated" class="updated"></time></div><button id="download" class="button" disabled>Download public data</button></div></header>
 <nav class="nav" aria-label="Report sections"><a href="#throughput">Tok/s summary</a><a href="#models">01 Models</a><a href="#routes">Benchmark routes</a><a href="#comparison">Compare scores</a><a href="#results">02 Results</a><a href="#pair">03 PAIR</a><a href="#experiments">04 Experiments</a><a href="#configuration">05 Configuration</a><a href="#validation">06 Verification</a><a href="#hardware">07 Machines</a><a href="#sources">08 Sources</a></nav>
 <main id="main"><noscript>This report needs JavaScript to render its embedded data. The HTML contains the full public JSON record; no network request is needed to render it.</noscript><div id="render-error" class="error hidden" role="alert"></div>
 <section id="throughput">
@@ -34,7 +34,7 @@
 <tbody id="throughput-rows"></tbody></table></div>
 <p id="throughput-note" class="note"></p>
 </section>
-<section id="models"><div class="section-head"><div><span class="section-index">01 / Know the setup</span><h2>The model is part of the result.</h2><p>27B and 35B-A3B are different models. GGUF and NVFP4 are different weight formats. PAIR is a router, not a model; Hermes and Codex are clients.</p></div></div><div id="model-map" class="grid model-map"></div><details><summary>Earlier j9 tuning configurations—kept separate from the selected model settings</summary><div id="historical-models" class="grid"></div></details></section>
+<section id="models"><div class="section-head"><div><span class="section-index">01 / Know the setup</span><h2>The model is part of the result.</h2><p>27B, 35B-A3B and 120B-A12B are different models. GGUF and NVFP4 are different weight formats. PAIR is a router, not a model; Hermes and Codex are clients.</p></div></div><div id="model-map" class="grid model-map"></div><details><summary>Earlier j9 tuning configurations—kept separate from the selected model settings</summary><div id="historical-models" class="grid"></div></details></section>
 <section id="routes"><div class="section-head"><div><span class="section-index">Method / Request paths</span><h2>Both PAIR and direct endpoints—not a route A/B test.</h2><p>Host, client location, request route and lifecycle owner are separate facts. “Bypasses PAIR” does not mean the benchmark client ran on the GPU machine, or that no gateway was involved.</p></div></div><div id="route-overview" class="grid two"></div></section>
 <section id="comparison">
 <div class="section-head"><div><span class="section-index">Comparison / Local + published</span><h2>All scores, with their conditions.</h2><p>Local runs, 0xSero’s registry recipes and other attributed references. Read the method under each number: bounded decode, streamed text and aggregate output are different measurements.</p></div></div>
@@ -54,8 +54,8 @@
 </div>
 <script id="report-data" type="application/json">{
   "title": "Local inference lab",
-  "updated_at": "2026-10-08T18:47:45.268510+00:00",
-  "status": "Spark Qwen3.8 benchmark completed; original Qwen3.6 service restored",
+  "updated_at": "2026-10-16T13:52:00+00:00",
+  "status": "Nemotron 3.5 Super VL measured on spark2; vision and long-context candidate, not a Qwen3.6 speed replacement",
   "privacy": "Public report: no credentials, network addresses, SSH instructions, or session identifiers.",
   "hardware": [
     {
@@ -72,6 +72,14 @@
       "available_ram_gib": 118,
       "free_disk": "3.5 TiB",
       "driver": "580.178.04",
+      "container_toolkit": "1.20.1"
+    },
+    {
+      "name": "spark2",
+      "gpu": "NVIDIA GB10",
+      "platform": "Linux ARM64",
+      "class": "DGX Spark-class",
+      "free_disk": "814G",
       "container_toolkit": "1.20.1"
     }
   ],
@@ -1404,6 +1412,241 @@
       "authenticated_original_response": "SPARK_RESTORED",
       "finish_reason": "stop",
       "note": "Original Qwen3.6 vLLM is active and enabled. PAIR remained running unchanged. Immediate --rm cleanup observation was transient; final explicit inspect confirmed the temporary container absent."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-decode-64k",
+      "label": "spark2 Nemotron: 1-user decode at 64K",
+      "status": "Measured",
+      "clients": 1,
+      "context_tokens": 65536,
+      "max_num_seqs": 1,
+      "speculative_tokens": 7,
+      "samples_n": 5,
+      "median_decode_tokens_per_second": 32.9,
+      "decode_range": [
+        31.4,
+        37.0
+      ],
+      "note": "Measured. One user, DFlash LiLiCorr, 7 speculative tokens, max-num-seqs 1, 64K context. Median of 5 runs: 32.9 tok/s, range 31.4–37.0."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-decode-114688",
+      "label": "spark2 Nemotron: 1-user decode at 114688",
+      "status": "Measured",
+      "clients": 1,
+      "context_tokens": 114688,
+      "max_num_seqs": 1,
+      "speculative_tokens": 7,
+      "samples_n": 5,
+      "median_decode_tokens_per_second": 34.0,
+      "decode_range": [
+        32.6,
+        37.7
+      ],
+      "note": "Measured. One user, seqs=1, context 114688. Median of 5 runs: 34.0 tok/s, range 32.6–37.7."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-decode-seqs8",
+      "label": "spark2 Nemotron: 1-user decode with max-num-seqs 8",
+      "status": "Measured",
+      "clients": 1,
+      "max_num_seqs": 8,
+      "samples_n": 5,
+      "median_decode_tokens_per_second": 25.4,
+      "decode_range": [
+        23.4,
+        25.9
+      ],
+      "note": "Measured. One user on a server with max-num-seqs 8. Median of 5 runs: 25.4 tok/s, range 23.4–25.9."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-decode-nospec",
+      "label": "spark2 Nemotron: 1-user decode without the draft",
+      "status": "Measured",
+      "clients": 1,
+      "max_num_seqs": 1,
+      "speculative_tokens": 0,
+      "samples_n": 5,
+      "median_decode_tokens_per_second": 18.7,
+      "decode_range": [
+        18.7,
+        18.8
+      ],
+      "note": "Measured A/B. One user, seqs=1, no speculative draft. Median of 5 runs: 18.7 tok/s, range 18.7–18.8."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-prefill",
+      "label": "spark2 Nemotron: prefill at 4K, 32K and ~102K",
+      "status": "Measured",
+      "prefill": [
+        {
+          "context": "4K",
+          "tokens_per_second": 2765,
+          "ttft_seconds": 1.49,
+          "median": true
+        },
+        {
+          "context": "32K",
+          "tokens_per_second": 2805,
+          "ttft_seconds": 11.6,
+          "median": true
+        },
+        {
+          "context": "~102K",
+          "tokens_per_second": "~2060",
+          "ttft_seconds": 49.4,
+          "median": false
+        }
+      ],
+      "note": "Measured. Prefill 2765 / 2805 / ~2060 tok/s at 4K / 32K / ~102K. TTFT 1.49 s / 11.6 s / 49.4 s. 4K and 32K are medians. The ~102K rate is approximate, as recorded."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-concurrency-8",
+      "label": "spark2 Nemotron: 8-client aggregate",
+      "status": "Measured with caveat",
+      "clients": 8,
+      "context_tokens": 65536,
+      "max_num_seqs": 8,
+      "runs_n": 3,
+      "aggregate_tokens_per_second_runs": [
+        111.6,
+        56.4,
+        52.2
+      ],
+      "stable_aggregate": false,
+      "first_run_per_client_median_tokens_per_second": 15.3,
+      "later_runs_max_ttft_seconds": "~36–39",
+      "note": "Measured, and not a stable number. Three 8-client aggregate totals at seqs=8, 64K: 111.6, 56.4 and 52.2 tok/s. Runs 2–3 had max TTFT ~36–39 s from queueing. The first run’s per-client median was 15.3 tok/s. Do not quote a single 8-client rate."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-spec-acceptance",
+      "label": "spark2 Nemotron: draft acceptance",
+      "status": "Measured",
+      "speculative_tokens": 7,
+      "mean_accepted_tokens_per_step": 3.63,
+      "accepted_tokens": 2619,
+      "drafts": 994,
+      "acceptance_percent_by_position": [
+        81,
+        61,
+        46,
+        31,
+        21,
+        14,
+        10
+      ],
+      "note": "Measured. Mean acceptance 3.63 tokens/step (2619 accepted / 994 drafts). Per-position acceptance 81%, 61%, 46%, 31%, 21%, 14%, 10%."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-kv-cache",
+      "label": "spark2 Nemotron: KV cache capacity",
+      "status": "Measured",
+      "kv_cache_tokens": {
+        "dflash_64k": "186K",
+        "dflash_114688": "266K",
+        "no_spec": "1.85M"
+      },
+      "note": "Measured capacity. 186K tokens with DFlash at 64K, 266K with DFlash at 114688, and 1.85M with no spec. The draft costs about 10× KV capacity."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-quality",
+      "label": "spark2 Nemotron: tools, JSON, recall and vision",
+      "status": "Passed",
+      "tools": "6/6",
+      "json_schema": "2/2",
+      "recall_32k": "3/3",
+      "recall_about_102k": "3/3",
+      "vision": "6/6",
+      "note": "Measured. All quality checks passed: tools 6/6, JSON-schema 2/2, recall at 32K 3/3, recall at ~102K 3/3, vision 6/6. The ~102K recall is the 100K needle (~102K tokens)."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-hermes",
+      "label": "spark2 Nemotron: Hermes Agent task",
+      "status": "Passed",
+      "hermes_seconds": 30,
+      "hermes_version": "0.19.0",
+      "verified_output": "totals.json",
+      "server": "no-spec",
+      "note": "Measured. Hermes Agent v0.19.0 task passed in 30 s and verified totals.json. It ran on the no-spec server. The campaign log states that spec decoding does not change output."
+    },
+    {
+      "kind": "measured",
+      "configuration_id": "spark2-nemotron-nvfp4-vllm",
+      "model": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "id": "spark2-nemotron-close",
+      "label": "spark2 Nemotron: campaign close",
+      "status": "Passed",
+      "temporary_container_stopped": true,
+      "stopped_at": "15:50 CEST",
+      "existing_services_untouched": [
+        "nvpair",
+        "spark",
+        "spark-vllm"
+      ],
+      "note": "Temporary campaign container stopped at 15:50 CEST. nvpair, spark and spark-vllm were left untouched."
     }
   ],
   "validation_coverage": [
@@ -1571,6 +1814,14 @@
     {
       "label": "Spark Qwen3.8 mixed-precision checkpoint, pinned revision",
       "url": "https://huggingface.co/RadixArk/Qwen3.8-27B-NVFP4-BF16-LMHead/tree/009632fef96dd349150baa780c984e62e70e91fe"
+    },
+    {
+      "label": "Nemotron 3.5 Super VL 120B-A12B NVFP4, pinned revision",
+      "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4/tree/579ffa0b659bc681b89e649fa7c2d5089399602e"
+    },
+    {
+      "label": "Nemotron 3.5 Super VL LiLiCorr draft, pinned revision",
+      "url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4-LiLiCorr/tree/7c7221aeb4cb3139307aa457f7dce11a8fb6ceb2"
     }
   ],
   "configurations": [
@@ -1694,6 +1945,22 @@
       "route": "Mac client → encrypted SSH → Spark loopback SGLang; no PAIR, Aperture or application gateway",
       "historical": false,
       "note": "Same Qwen3.8-27B family but different quantized checkpoint and ARM64-specific SGLang runtime from j9 EXL3; not a hardware-only speed comparison. MTP 3 steps/topk1/4 draft tokens and FP8 KV retained. Remote timing uses SSH direct transport, not the j9 gateway. All six gates passed at 106,294 actual input tokens; full configured context not tested."
+    },
+    {
+      "id": "spark2-nemotron-nvfp4-vllm",
+      "label": "spark2 · Nemotron 3.5 Super VL 120B-A12B · NVFP4",
+      "model": "Nemotron 3.5 Super VL 120B-A12B",
+      "model_id": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "host": "spark2",
+      "runtime": "vLLM",
+      "weights": "NVFP4",
+      "kv_cache": "FP8 (auto)",
+      "context_tokens": 114688,
+      "speculative_decoding": "DFlash LiLiCorr, 7 speculative tokens",
+      "state": "Campaign finished; temporary container stopped",
+      "route": "Direct vLLM on spark2; not PAIR",
+      "historical": false,
+      "note": "Finished 2026-10-16 campaign on spark2, a DGX Spark-class GB10. Image vllm/vllm-openai nightly-3f1bcfd82bb2e93fcd364fc7a5491718453a77e2 (vLLM 0.32.0rc1.dev190+g3f1bcfd82), arm64 digest sha256:fd33bec1578f312a01547cc6b9691a5154c3e8bcfb76d2b35acb657bfc4eee8f. Model rev 579ffa0b659bc681b89e649fa7c2d5089399602e; LiLiCorr draft rev 7c7221aeb4cb3139307aa457f7dce11a8fb6ceb2. gpu-memory-utilization 0.75. The 64K suite used max-model-len 65536; 114688 is the longest context served. Not a speed replacement for the prior Spark Qwen3.6-35B-A3B NVFP4 measurement."
     }
   ],
   "pair_verification": {
@@ -2830,6 +3097,43 @@
           "label": "Publisher’s environment",
           "detail": "External reference, not a run through our PAIR or Aperture stack; see source."
         }
+      },
+      {
+        "id": "spark2-nemotron-nvfp4-vllm",
+        "origin": "local",
+        "model": "Nemotron 3.5 Super VL 120B-A12B",
+        "setup": "NVFP4 · vLLM nightly · FP8 KV · DFlash draft7",
+        "hardware": "spark2 · GB10",
+        "source": "This lab · 2026-10-16",
+        "evidence_class": "Measured locally",
+        "decode": {
+          "value": 32.9,
+          "note": "Measured median, 1 user, 64K, DFlash k=7, n=5, range 31.4–37.0. Also measured: 34.0 at 114688 (32.6–37.7, n=5); 25.4 with max-num-seqs 8 (23.4–25.9, n=5); 18.7 without the draft (18.7–18.8, n=5)."
+        },
+        "input_rate": {
+          "value": null,
+          "note": "Native prefill, not a whole-request input rate: 2765 tok/s at 4K (TTFT 1.49 s), 2805 at 32K (TTFT 11.6 s), ~2060 at ~102K (TTFT 49.4 s)."
+        },
+        "context": {
+          "value": 114688,
+          "note": "Longest context served. The 64K suite used 65536. Recall checked at 32K and ~102K."
+        },
+        "checks": {
+          "value": "All passed",
+          "note": "Measured: tools 6/6, JSON-schema 2/2, recall 3/3 at 32K, recall 3/3 at ~102K, vision 6/6."
+        },
+        "agent": {
+          "value": 30,
+          "note": "Measured. Hermes Agent v0.19.0; verified totals.json; ran on the no-spec server."
+        },
+        "aggregate": {
+          "value": null,
+          "note": "Not a stable number. Measured 8-client totals: 111.6, 56.4, 52.2 tok/s (n=3). Runs 2–3 queued (max TTFT ~36–39 s)."
+        },
+        "route": {
+          "label": "Direct vLLM; not PAIR",
+          "detail": "Loopback vLLM on spark2. Prior Spark Qwen3.6-35B-A3B NVFP4 (~100 single-stream / 228 at 8 clients) is a prior measurement with a different harness, not like-for-like."
+        }
       }
     ],
     "notes": [
@@ -2841,7 +3145,8 @@
       "Input rates here are context-prompt tokens divided by whole request time unless explicitly labelled otherwise. They include output/network overhead; input lengths and cache states differ. They are not interchangeable with native prefill counters.",
       "Qwen3.6 27B, Qwen3.8 27B and Qwen3.6 35B-A3B are different models; quantization, MTP, context and runtime also differ. Throughput is not a model-quality score. Agent times involve different tool trajectories and are not controlled speedups.",
       "Spark 95.1 tok/s and 317.0 aggregate are MiaAI-Lab’s published results, not personal 0xSero measurements. LocalMaxxing 46.64/101 are archived observations with unidentified submitters, not current registry acceptance.",
-      "Current recipe summaries contain proof hashes, but their target raw September 28 run files were not available in the inspected registry snapshot. Missing values remain missing. Historical rejected configurations are retained."
+      "Current recipe summaries contain proof hashes, but their target raw September 28 run files were not available in the inspected registry snapshot. Missing values remain missing. Historical rejected configurations are retained.",
+      "Nemotron 3.5 Super VL 120B-A12B NVFP4 on spark2 measured 32.9 tok/s single-user median at 64K (31.4–37.0, n=5) with DFlash and 7 speculative tokens. It is not a speed replacement for Qwen3.6-35B-A3B NVFP4. That baseline (~100 tok/s single-stream, 228 tok/s at 8 clients) is a prior measurement on Spark with a different harness, not like-for-like and not a remeasurement on 2026-10-16. Nemotron is a vision and long-context candidate: tools 6/6, JSON 2/2, recall 3/3 at 32K and 3/3 at ~102K, vision 6/6, and Hermes Agent v0.19.0 passed. Eight-client totals were 111.6, 56.4 and 52.2 tok/s and are not a stable number. A derived bandwidth ceiling, not a measured rate, is ~40 tok/s for 12B active parameters at 273 GB/s."
     ]
   },
   "route_evidence": [
@@ -2860,6 +3165,10 @@
     {
       "title": "Inference success ≠ lifecycle verification",
       "detail": "Later inspection on 2026-10-08 found plugin-owned Qwen3.8 containers running while Local AI 6.0.1 retained a stopping entry dated 2026-09-27. A real plugin snapshot reported stopped unexpectedly. The earlier scores remain recorded inference measurements; plugin stop/start, UI-state recovery and endpoint continuity were not validated. This is a dated observation, not live status."
+    },
+    {
+      "title": "spark2 Nemotron is not a like-for-like Spark speed test",
+      "detail": "The 2026-10-16 Nemotron 3.5 Super VL campaign was measured on spark2, a separate DGX Spark-class GB10, with vLLM nightly and DFlash. The Qwen3.6-35B-A3B NVFP4 figures of ~100 tok/s single-stream and 228 tok/s at 8 clients are a prior measurement on Spark with a different harness. They are not a remeasurement and not a controlled comparison."
     }
   ],
   "throughput_summary": {
@@ -2973,9 +3282,59 @@
         "workload": "1 stream · separate functional speed gate",
         "decode": "15.83",
         "source_run_id": "spark-qwen38-six-gates"
+      },
+      {
+        "machine": "spark2 · GB10",
+        "model": "Nemotron 3.5 Super VL 120B-A12B",
+        "runtime": "vLLM nightly · NVFP4 · DFlash k=7",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "1 user · 64K · median of 5",
+        "decode": "32.9 (31.4–37.0)",
+        "aggregate": "—",
+        "source_run_id": "spark2-nemotron-decode-64k"
+      },
+      {
+        "machine": "spark2 · GB10",
+        "model": "Nemotron 3.5 Super VL 120B-A12B",
+        "runtime": "vLLM nightly · NVFP4 · DFlash k=7",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "1 user · context 114688 · median of 5",
+        "decode": "34.0 (32.6–37.7)",
+        "aggregate": "—",
+        "source_run_id": "spark2-nemotron-decode-114688"
+      },
+      {
+        "machine": "spark2 · GB10",
+        "model": "Nemotron 3.5 Super VL 120B-A12B",
+        "runtime": "vLLM nightly · NVFP4 · DFlash k=7",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "1 user · server max-num-seqs 8 · median of 5",
+        "decode": "25.4 (23.4–25.9)",
+        "aggregate": "—",
+        "source_run_id": "spark2-nemotron-decode-seqs8"
+      },
+      {
+        "machine": "spark2 · GB10",
+        "model": "Nemotron 3.5 Super VL 120B-A12B",
+        "runtime": "vLLM nightly · NVFP4 · no draft",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "1 user · A/B without draft · median of 5",
+        "decode": "18.7 (18.7–18.8)",
+        "aggregate": "—",
+        "source_run_id": "spark2-nemotron-decode-nospec"
+      },
+      {
+        "machine": "spark2 · GB10",
+        "model": "Nemotron 3.5 Super VL 120B-A12B",
+        "runtime": "vLLM nightly · NVFP4 · DFlash k=7",
+        "route": "Direct vLLM; no PAIR",
+        "workload": "8 clients · seqs=8 · 64K · n=3 · not a stable number",
+        "decode": "—",
+        "aggregate": "111.6 / 56.4 / 52.2 (unstable)",
+        "source_run_id": "spark2-nemotron-concurrency-8"
       }
     ],
-    "note": "Output tok/s only. Ranges show observed per-stream/sample minima and maxima; Qwen3.8 completed runs show median (range). The same j9 lighthouse streams give 138.87 tok/s using characters÷4, an estimate—not a separate benchmark. Earlier j9 fit/rejected configurations have no recorded output-speed measurement. Input/context rates and external publisher scores are in the detailed comparison. No controlled PAIR-versus-direct overhead test was performed. Spark Qwen3.8 uses a different quantized checkpoint and ARM64 runtime from j9; these are deployment comparisons, not hardware-only speedups. Its chars÷4 median is 15.27; one measured replicate fell below 15 tok/s. Spark Qwen3.6 was restored after the test."
+    "note": "Output tok/s only. Ranges show observed per-stream/sample minima and maxima; Qwen3.8 completed runs show median (range). The same j9 lighthouse streams give 138.87 tok/s using characters÷4, an estimate—not a separate benchmark. Earlier j9 fit/rejected configurations have no recorded output-speed measurement. Input/context rates and external publisher scores are in the detailed comparison. No controlled PAIR-versus-direct overhead test was performed. Spark Qwen3.8 uses a different quantized checkpoint and ARM64 runtime from j9; these are deployment comparisons, not hardware-only speedups. Its chars÷4 median is 15.27; one measured replicate fell below 15 tok/s. Spark Qwen3.6 was restored after the test. spark2 Nemotron 3.5 Super VL 120B-A12B NVFP4 rows are measured on 2026-10-16. Single-user decode rows are medians of 5. The 8-client aggregate is three runs (111.6, 56.4, 52.2) and is not a stable number. Prefill (2765 / 2805 / ~2060 tok/s) is a native prefill rate in the comparison, not an output tok/s. The ~100 / 228 Qwen3.6-35B-A3B NVFP4 figures stay a prior Spark measurement on a different harness, not like-for-like."
   },
   "spark_qwen38_deployment": {
     "model": {
@@ -3056,6 +3415,75 @@
     ],
     "state": "Temporary benchmark deployment removed; original Qwen3.6 restored",
     "raw_evidence_sha256": "989b3e7a503cb02d9862a3efe40bffaacfdab3a5dba81a170b9d23c61608c7b6"
+  },
+  "spark2_nemotron_deployment": {
+    "model": {
+      "repository": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4",
+      "revision": "579ffa0b659bc681b89e649fa7c2d5089399602e",
+      "quantization": "NVFP4",
+      "files": 114,
+      "bytes": 75063320357,
+      "size_label": "75.06 GB",
+      "integrity": "114/114 files hash-verified"
+    },
+    "draft": {
+      "repository": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-NVFP4-LiLiCorr",
+      "revision": "7c7221aeb4cb3139307aa457f7dce11a8fb6ceb2",
+      "method": "DFlash LiLiCorr",
+      "speculative_tokens": 7,
+      "files": 5,
+      "bytes": 1317977612,
+      "size_label": "1.32 GB",
+      "integrity": "5/5 files hash-verified"
+    },
+    "image": "vllm/vllm-openai@sha256:fd33bec1578f312a01547cc6b9691a5154c3e8bcfb76d2b35acb657bfc4eee8f",
+    "image_tag": "nightly-3f1bcfd82bb2e93fcd364fc7a5491718453a77e2",
+    "index_digest": "sha256:cb9bc64f0f038c2c2ebf13b31248fb87aca40c356c3d20f363be087cfcff1fcd",
+    "runtime": "vLLM 0.32.0rc1.dev190+g3f1bcfd82",
+    "platform": {
+      "machine": "spark2",
+      "class": "DGX Spark-class",
+      "architecture": "arm64",
+      "gpu": "NVIDIA GB10",
+      "container_toolkit": "1.20.1",
+      "gpu_access": "CDI nvidia.com/gpu=all; no nvidia runtime entry"
+    },
+    "settings": {
+      "gpu_memory_utilization": 0.75,
+      "kv_cache_dtype": "fp8 (auto)",
+      "speculative_tokens": 7,
+      "contexts_served": [
+        65536,
+        114688
+      ],
+      "max_num_seqs_variants": [
+        1,
+        8
+      ]
+    },
+    "hf_cache": "72 GiB",
+    "kv_cache_tokens": {
+      "dflash_64k": "186K",
+      "dflash_114688": "266K",
+      "no_spec": "1.85M",
+      "draft_capacity_cost": "about 10×"
+    },
+    "bandwidth_sanity": {
+      "label": "Derived bound, not a measured tok/s",
+      "active_parameters": "12B",
+      "bytes_read_per_token": "about 6.75 GB",
+      "bandwidth_gb_per_s": 273,
+      "ceiling_tokens_per_second": "~40",
+      "measured_no_spec_tokens_per_second": 18.7,
+      "implied_bandwidth_gb_per_s": "~126",
+      "fraction_of_peak": "about 46%",
+      "prior_qwen_active_parameters": "3B",
+      "prior_qwen_ceiling_tokens_per_second": "~160",
+      "active_parameter_gap": "about 4×"
+    },
+    "verdict": "Not a speed replacement for Qwen3.6-35B-A3B NVFP4. Vision and long-context candidate. The ~100 tok/s single-stream and 228 tok/s at 8 clients are a prior Spark measurement with a different harness, not like-for-like.",
+    "state": "Campaign finished 2026-10-16; temporary container stopped at 15:50 CEST; nvpair, spark and spark-vllm untouched",
+    "provenance_note": "Release tag vllm/vllm-openai:v0.32.0 is not on Docker Hub (manifest unknown; newest release noted as v0.31.0). The pulled arm64 image is nightly-3f1bcfd82bb2e93fcd364fc7a5491718453a77e2, reported as vLLM 0.32.0rc1.dev190+g3f1bcfd82. The image ID in the campaign log was truncated and is not recorded here."
   }
 }</script>
 <script>
@@ -3080,8 +3508,8 @@ byId('report-title').textContent=data.title;byId('report-status').textContent=da
 data.configurations.forEach(c=>{const card=el('article',null,'card');card.append(el('p',c.host+' / '+c.runtime,'label'),el('h3',c.model));identity(card,c);card.append(badge(c.state));const d={weights:c.weights};for(const k of ['kv_cache','context_tokens','speculative_decoding'])if(k in c)d[k]=c[k];fields(card,d);if(c.note)card.append(el('p',c.note,'note'));byId(c.historical?'historical-models':'model-map').append(card);const option=el('option',c.label);option.value=c.id;byId('configuration-filter').append(option);});
 data.route_evidence.forEach(item=>{const card=el('article',null,'card');card.append(el('h3',item.title),el('p',item.detail));byId('route-overview').append(card);});
 data.throughput_summary.rows.forEach(r=>{const tr=el('tr'),machine=el('th',r.machine);machine.scope='row';tr.append(machine);const model=el('td');model.append(el('strong',r.model),el('p',r.runtime,'note'));tr.append(model);for(const key of ['route','workload','decode','aggregate'])tr.append(el('td',r[key]));byId('throughput-rows').append(tr);});byId('throughput-note').textContent=data.throughput_summary.note;
-const selections=[['j9-q8-final','j9-final-decode','j9-final-hermes'],['spark-gguf-pair',null,'spark-gguf-baseline'],['spark-nvfp4-vllm','spark-concurrency-1','spark-hermes']];
-for(const [id,decodeId,workflowId] of selections){const c=config(id),card=el('article',null,'card');identity(card,c);const metrics=el('div',null,'metrics');if(decodeId){const r=run(decodeId);metric(metrics,r.generation_tokens_per_second??r.samples[0].generation_tokens_per_second,'tokens/s','Bounded decode');}else metric(metrics,8,'of 8 tests','Behavior checks');const w=run(workflowId);metric(metrics,w.hermes_seconds??w.agent_seconds,'seconds',id==='spark-gguf-pair'?'Codex workflow':'Hermes workflow');card.append(metrics,badge(w.status));card.append(el('p',id==='spark-gguf-pair'?'GGUF via PAIR. Task passed with Responses routing errors; this is not the NVFP4 result.':w.tool_calls+' tool calls; original and unseen inputs checked. '+(id==='j9-q8-final'?'Hermes and decode routed through PAIR.':'Hermes used encrypted SSH to vLLM; PAIR bypassed.'),'note'));byId('result-cards').append(card);}
+const selections=[['j9-q8-final','j9-final-decode','j9-final-hermes'],['spark-gguf-pair',null,'spark-gguf-baseline'],['spark-nvfp4-vllm','spark-concurrency-1','spark-hermes'],['spark2-nemotron-nvfp4-vllm','spark2-nemotron-decode-64k','spark2-nemotron-hermes']];
+for(const [id,decodeId,workflowId] of selections){const c=config(id),card=el('article',null,'card');identity(card,c);const metrics=el('div',null,'metrics');if(decodeId){const r=run(decodeId);const decode=r.generation_tokens_per_second??r.median_decode_tokens_per_second??r.samples[0].generation_tokens_per_second;metric(metrics,decode,'tokens/s',r.median_decode_tokens_per_second!=null?'Measured median decode':'Bounded decode');}else metric(metrics,8,'of 8 tests','Behavior checks');const w=run(workflowId);metric(metrics,w.hermes_seconds??w.agent_seconds,'seconds',id==='spark-gguf-pair'?'Codex workflow':'Hermes workflow');card.append(metrics,badge(w.status));card.append(el('p',id==='spark-gguf-pair'?'GGUF via PAIR. Task passed with Responses routing errors; this is not the NVFP4 result.':id==='spark2-nemotron-nvfp4-vllm'?'Measured 64K median with DFlash, 7 speculative tokens. Not a speed replacement for the prior Spark Qwen3.6-35B-A3B NVFP4 result (~100 single-stream / 228 at 8 clients, different harness, not like-for-like). Vision and long-context candidate. Hermes Agent v0.19.0 ran on the no-spec server.':w.tool_calls+' tool calls; original and unseen inputs checked. '+(id==='j9-q8-final'?'Hermes and decode routed through PAIR.':'Hermes used encrypted SSH to vLLM; PAIR bypassed.'),'note'));byId('result-cards').append(card);}
 const concurrency=byId('concurrency');concurrency.append(el('h3','Spark NVFP4 · aggregate streaming output'));identity(concurrency,config('spark-nvfp4-vllm'));const samples=[1,4,8].map(n=>run('spark-concurrency-'+n)),max=Math.max(...samples.map(r=>r.aggregate_tokens_per_second));samples.forEach(r=>{const row=el('div',null,'bar-row'),track=el('div',null,'bar-track'),bar=el('div',null,'bar');bar.style.width=(r.aggregate_tokens_per_second/max*100)+'%';track.append(bar);row.append(el('span',r.clients+' clients'),track,el('span',number(r.aggregate_tokens_per_second)));concurrency.append(row);});concurrency.append(el('p','Tokens/s aggregate, including prefill and queueing. Each client generated 256 tokens. Eight clients shared four active slots. The single-client aggregate differs from decode-only speed above.','note'));
 for(const row of data.comparison.rows){
  const tr=el('tr',null,row.origin==='local'?'local':'external'),model=el('th');model.scope='row';model.append(el('p',row.model,'run-title'),el('code',row.setup),el('p',row.hardware,'method'));tr.append(model);
@@ -3097,11 +3525,11 @@ byId('configuration-filter').addEventListener('change',renderRuns);renderRuns();
 identity(byId('j9-config'),config('j9-q8-final'));fields(byId('j9-config'),data.current_model);
 identity(byId('spark-config'),config('spark-nvfp4-vllm'));const dep=data.spark_deployment;fields(byId('spark-config'),dep,['model_revision','recipe_revision','image_digest','image_repository']);const pins=el('details');pins.append(el('summary','Immutable model and container pins'));fields(pins,Object.fromEntries(['model_revision','recipe_revision','image_digest','image_repository'].map(k=>[k,dep[k]])));byId('spark-config').append(pins);
 const qwenConfig=byId('qwen38-config');identity(qwenConfig,config('j9-qwen38-sglang'));qwenConfig.append(badge('Measured with context caveat'),el('p',config('j9-qwen38-sglang').note));const qwenPins=el('details');qwenPins.append(el('summary','Qwen3.8 model, image, runtime and context limits'));fields(qwenPins,data.qwen38_deployment);qwenConfig.append(qwenPins);
-const spark38Config=el('div',null,'card');spark38Config.style.gridColumn='1/-1';identity(spark38Config,config('spark-qwen38-sglang'));spark38Config.append(badge('Benchmark complete; Qwen3.6 restored'),el('p',config('spark-qwen38-sglang').note));const spark38Pins=el('details');spark38Pins.append(el('summary','Spark Qwen3.8 model, image, runtime and measurement pins'));fields(spark38Pins,data.spark_qwen38_deployment);spark38Config.append(spark38Pins);qwenConfig.after(spark38Config);
+const spark38Config=el('div',null,'card');spark38Config.style.gridColumn='1/-1';identity(spark38Config,config('spark-qwen38-sglang'));spark38Config.append(badge('Benchmark complete; Qwen3.6 restored'),el('p',config('spark-qwen38-sglang').note));const spark38Pins=el('details');spark38Pins.append(el('summary','Spark Qwen3.8 model, image, runtime and measurement pins'));fields(spark38Pins,data.spark_qwen38_deployment);spark38Config.append(spark38Pins);qwenConfig.after(spark38Config);const nemotronConfig=el('div',null,'card');nemotronConfig.style.gridColumn='1/-1';identity(nemotronConfig,config('spark2-nemotron-nvfp4-vllm'));nemotronConfig.append(badge(config('spark2-nemotron-nvfp4-vllm').state),el('p',config('spark2-nemotron-nvfp4-vllm').note));const nemotronPins=el('details');nemotronPins.append(el('summary','spark2 Nemotron model, image, runtime and measurement pins'));fields(nemotronPins,data.spark2_nemotron_deployment);nemotronConfig.append(nemotronPins);spark38Config.after(nemotronConfig);
 byId('verification-target').textContent='Target: '+config('spark-nvfp4-vllm').model_id+' · Spark · direct vLLM, not PAIR.';
 data.planned_tests.forEach(t=>{const card=el('article',null,'card');card.append(el('h3',t.name));identity(card,config(t.configuration_id));card.append(badge(t.status),el('p',t.purpose,'note'));byId('test-plan').append(card);});
 const qwenValidation=byId('qwen38-validation'),qwenEvidence=run('qwen38-registry-128k');qwenValidation.append(el('h3','Qwen3.8 · six registry-style checks'));identity(qwenValidation,config('j9-qwen38-sglang'));qwenValidation.append(badge('Passed at 128K target; context caveat'));fields(qwenValidation,qwenEvidence.evidence.ok);qwenValidation.append(el('p',config('j9-qwen38-sglang').note,'note'));
-const spark38Validation=el('div',null,'card');spark38Validation.style.marginTop='20px';spark38Validation.append(el('h3','Spark Qwen3.8 · six registry-style checks'));identity(spark38Validation,config('spark-qwen38-sglang'));spark38Validation.append(badge('6/6 passed at 128K target'));fields(spark38Validation,run('spark-qwen38-six-gates').evidence.ok);spark38Validation.append(el('p','106,294 input tokens tested; configured 204,800 context not fully tested. Separate speed gate: 15.83 tok/s. One matched throughput replicate was below the 15 tok/s floor. Original Qwen3.6 restored; PAIR remained running.','note'));qwenValidation.after(spark38Validation);
+const spark38Validation=el('div',null,'card');spark38Validation.style.marginTop='20px';spark38Validation.append(el('h3','Spark Qwen3.8 · six registry-style checks'));identity(spark38Validation,config('spark-qwen38-sglang'));spark38Validation.append(badge('6/6 passed at 128K target'));fields(spark38Validation,run('spark-qwen38-six-gates').evidence.ok);spark38Validation.append(el('p','106,294 input tokens tested; configured 204,800 context not fully tested. Separate speed gate: 15.83 tok/s. One matched throughput replicate was below the 15 tok/s floor. Original Qwen3.6 restored; PAIR remained running.','note'));qwenValidation.after(spark38Validation);const nemotronValidation=el('div',null,'card');nemotronValidation.style.marginTop='20px';nemotronValidation.append(el('h3','spark2 Nemotron · quality checks'));identity(nemotronValidation,config('spark2-nemotron-nvfp4-vllm'));nemotronValidation.append(badge('All passed'));const nq=run('spark2-nemotron-quality'),nh=run('spark2-nemotron-hermes');fields(nemotronValidation,{tools:nq.tools,json_schema:nq.json_schema,recall_32k:nq.recall_32k,recall_about_102k:nq.recall_about_102k,vision:nq.vision,hermes_seconds:nh.hermes_seconds,hermes_version:nh.hermes_version});nemotronValidation.append(el('p',nq.note+' '+nh.note+' Eight-client aggregate is not a stable number: 111.6, 56.4, 52.2 tok/s.','note'));spark38Validation.after(nemotronValidation);
 byId('coverage-models').textContent='Hermes workflows: '+config('j9-q8-final').model_id+' on j9 via PAIR; '+config('spark-nvfp4-vllm').model_id+' on Spark via direct vLLM.';
 data.validation_coverage.forEach(x=>byId('coverage').append(el('li',typeof x==='string'?x:JSON.stringify(x))));
 data.hardware.forEach(h=>{const card=el('article',null,'card');card.append(el('h3',h.name));fields(card,h,['name']);byId('hardware-cards').append(card);});
